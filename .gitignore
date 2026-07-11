@@ -1,0 +1,10 @@
+# pixi
+.pixi/
+
+# colcon workspace artifacts
+build/
+install/
+log/
+
+# third-party packages fetched by `pixi run fetch-deps`
+src/twist_stamper/

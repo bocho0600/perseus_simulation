@@ -2,7 +2,6 @@ from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
     IncludeLaunchDescription,
-    ExecuteProcess,
     TimerAction,
 )
 from launch.conditions import IfCondition
@@ -101,26 +100,13 @@ def generate_launch_description():
     ekf_config_file = PathJoinSubstitution(
         [FindPackageShare("perseus_simulation"), "config", "ekf_sim_config.yaml"]
     )
-    rviz = ExecuteProcess(
-        cmd=[
-            "nix",
-            "run",
-            "--impure",
-            "github:nix-community/nixGL",
-            "--",
-            "rviz2",
-            "-d",
-            rviz_config,
-        ],
+    rviz = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        arguments=["-d", rviz_config],
+        parameters=[{"use_sim_time": use_sim_time}],
         output="screen",
-        additional_env={
-            "NIXPKGS_ALLOW_UNFREE": "1",
-            "QT_QPA_PLATFORM": "xcb",
-            "QT_SCREEN_SCALE_FACTORS": "1",
-            "ROS_NAMESPACE": "/",
-            "RMW_QOS_POLICY_HISTORY": "keep_last",
-            "RMW_QOS_POLICY_DEPTH": "100",
-        },
     )
 
     # EKF node - only run if launch_ekf parameter is true

@@ -1,0 +1,80 @@
+[workspace]
+name = "perseus-simulation"
+version = "0.0.1"
+description = "Perseus V2 rover Gazebo simulation (ROS 2 Jazzy), managed with pixi"
+authors = ["Perseus team"]
+channels = ["https://prefix.dev/robostack-jazzy", "conda-forge"]
+platforms = ["linux-64"]
+
+# ---------------------------------------------------------------------------
+# Tasks
+# ---------------------------------------------------------------------------
+# The whole workflow is driven through pixi:
+#   pixi run build    # build the colcon workspace
+#   pixi run sim      # build (incrementally) + launch the Gazebo simulation
+#   pixi run teleop   # drive the rover with the keyboard (second terminal)
+#   pixi run clean    # remove colcon build artifacts
+[tasks.fetch-deps]
+description = "Clone third-party ROS packages not published on RoboStack"
+# twist_stamper is a small pure-python node used by the twist_mux launch file
+# but is not available on the robostack-jazzy channel, so we build it from
+# source inside the workspace.
+cmd = "test -d src/twist_stamper || git clone --depth 1 https://github.com/joshnewans/twist_stamper.git src/twist_stamper"
+
+[tasks.build]
+description = "Build the ROS 2 workspace with colcon"
+depends-on = ["fetch-deps"]
+cmd = "colcon build --symlink-install --event-handlers console_direct+"
+
+[tasks.sim]
+description = "Build and launch the Perseus Gazebo simulation"
+depends-on = ["build"]
+cmd = "bash -c 'source install/setup.bash && ros2 launch perseus_simulation perseus_sim.launch.py'"
+
+[tasks.teleop]
+description = "Drive the rover with the keyboard (run in a second terminal)"
+cmd = "ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=true"
+
+[tasks.clean]
+description = "Remove colcon build/install/log artifacts"
+cmd = "rm -rf build install log"
+
+# ---------------------------------------------------------------------------
+# Dependencies (from robostack-jazzy + conda-forge)
+# ---------------------------------------------------------------------------
+[dependencies]
+# ROS 2 Jazzy base + build tooling
+ros-jazzy-desktop = "*"
+ros-jazzy-ros2launch = "*"
+ros-jazzy-ament-cmake = "*"
+colcon-common-extensions = "*"
+cmake = "*"
+ninja = "*"
+pkg-config = "*"
+cxx-compiler = "*"
+c-compiler = "*"
+python = "*"
+git = "*"
+
+# Simulation / Gazebo bridge
+ros-jazzy-ros-gz-sim = "*"
+ros-jazzy-ros-gz-bridge = "*"
+ros-jazzy-ros-gz-image = "*"
+ros-jazzy-ros-gz-interfaces = "*"
+ros-jazzy-gz-ros2-control = "*"
+
+# ros2_control
+ros-jazzy-controller-manager = "*"
+ros-jazzy-diff-drive-controller = "*"
+ros-jazzy-mecanum-drive-controller = "*"
+ros-jazzy-joint-state-broadcaster = "*"
+ros-jazzy-robot-state-publisher = "*"
+ros-jazzy-xacro = "*"
+
+# Nodes used by the simulation launch files
+ros-jazzy-robot-localization = "*"
+ros-jazzy-rosbridge-suite = "*"
+ros-jazzy-twist-mux = "*"
+ros-jazzy-teleop-twist-keyboard = "*"
+ros-jazzy-realsense2-description = "*"
+ros-jazzy-joint-state-publisher-gui = "*"

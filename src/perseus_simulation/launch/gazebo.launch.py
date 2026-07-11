@@ -1,9 +1,11 @@
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
-    ExecuteProcess,
+    IncludeLaunchDescription,
     OpaqueFunction,
+    SetEnvironmentVariable,
 )
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     PathJoinSubstitution,
     LaunchConfiguration,
@@ -57,35 +59,36 @@ def generate_launch_description():
         ),
     ]
 
+    # ENVIRONMENT
+    model_path = os.path.join(
+        get_package_share_directory("perseus_simulation"), "models"
+    )
+    set_env = [
+        SetEnvironmentVariable("PROJ_IGNORE_CELESTIAL_BODY", "YES"),
+        # Ensure the model path is set correctly for Gazebo
+        SetEnvironmentVariable("GZ_SIM_RESOURCE_PATH", model_path),
+    ]
+
     # IMPORTED LAUNCH FILES
     def gz_launch(context):
         # Perform the world path substitution
         performed_gz_world_path = gz_world_path.perform(context)
 
-        model_path = os.path.join(
-            get_package_share_directory("perseus_simulation"), "models"
-        )
-        gz_launch = ExecuteProcess(
-            cmd=[
-                "nix",
-                "run",
-                "--impure",
-                "github:nix-community/nixGL",
-                "--",
-                "ros2",
-                "launch",
-                "ros_gz_sim",
-                "gz_sim.launch.py",
-                f"gz_args:=-r -v 4 {performed_gz_world_path}",
-            ],
-            output="both",
-            additional_env={
-                "NIXPKGS_ALLOW_UNFREE": "1",
-                "QT_QPA_PLATFORM": "xcb",
-                "QT_SCREEN_SCALE_FACTORS": "1",
-                "PROJ_IGNORE_CELESTIAL_BODY": "YES",  # Fixed here
-                "GZ_SIM_RESOURCE_PATH": model_path,  # Ensure the model path is set correctly
-            },
+        gz_launch = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [
+                    PathJoinSubstitution(
+                        [
+                            FindPackageShare("ros_gz_sim"),
+                            "launch",
+                            "gz_sim.launch.py",
+                        ]
+                    )
+                ]
+            ),
+            launch_arguments={
+                "gz_args": f"-r -v 4 {performed_gz_world_path}",
+            }.items(),
         )
 
         return [gz_launch]
@@ -130,4 +133,4 @@ def generate_launch_description():
         gz_spawn_entity,
     ]
 
-    return LaunchDescription(arguments + launch_files + nodes)
+    return LaunchDescription(set_env + arguments + launch_files + nodes)

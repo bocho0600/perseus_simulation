@@ -2,29 +2,52 @@
 
 This readme file explains how to launch the Gazebo Simulation environment and control the rover.
 
-There is a separate nix devshell for simulation which is accessed via:
+The environment (ROS 2 Jazzy + Gazebo) is fully managed by [pixi](https://pixi.sh),
+using the [RoboStack](https://robostack.github.io/) conda channels. No system ROS
+installation is required, and there is no longer a nix devshell.
+
+> **Note:** do **not** `source /opt/ros/*/setup.bash` before running pixi — a
+> system ROS environment leaking in can conflict with the RoboStack packages.
+> Run the pixi commands from a clean shell.
+
+## One-time setup
+
+Install pixi (if you don't have it):
 
 ```
-nix develop .#simulation
+curl -fsSL https://pixi.sh/install.sh | bash
 ```
 
-To run the most basic version of the simulation you will need to run the following in **two separate terminals**.
+The first `pixi run` will download the ROS 2 / Gazebo packages and build the
+workspace automatically. The lunar moonscape model is also downloaded from the
+Gazebo Fuel server the first time you launch — see the note at the bottom.
 
 ## Terminal 1: Launch Simulation Environment
 
-To create the simulation:
+From the repository root:
 
 ```
-ros2 launch perseus_simulation perseus_sim.launch.py
+pixi run sim
 ```
+
+This builds the colcon workspace (incrementally) and then runs
+`ros2 launch perseus_simulation perseus_sim.launch.py`.
 
 ## Terminal 2: Control Perseus via keyboard
 
-To send control commands using the keyboard:
+```
+pixi run teleop
+```
 
-```
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=true
-```
+## Other pixi tasks
+
+| Command | Description |
+| --- | --- |
+| `pixi run build` | Build the colcon workspace only |
+| `pixi run sim` | Build + launch the Gazebo simulation |
+| `pixi run teleop` | Drive the rover with the keyboard |
+| `pixi run clean` | Remove `build/`, `install/`, and `log/` |
+| `pixi shell` | Drop into an activated ROS 2 environment |
 
 ## Note on start first time
 
