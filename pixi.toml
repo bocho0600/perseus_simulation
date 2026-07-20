@@ -7,6 +7,18 @@ channels = ["https://prefix.dev/robostack-jazzy", "conda-forge"]
 platforms = ["linux-64"]
 
 # ---------------------------------------------------------------------------
+# Environment
+# ---------------------------------------------------------------------------
+# RoboStack installs Gazebo's ROS integration into the conda prefix, but it
+# does not point Gazebo's search paths there. Without these, Gazebo cannot load
+# the gz_ros2_control system plugin (so no controller_manager starts) and cannot
+# resolve `model://` meshes such as realsense2_description. The nix devshell
+# used to provide the equivalent paths.
+[activation.env]
+GZ_SIM_SYSTEM_PLUGIN_PATH = "$CONDA_PREFIX/lib"
+GZ_SIM_RESOURCE_PATH = "$CONDA_PREFIX/share"
+
+# ---------------------------------------------------------------------------
 # Tasks
 # ---------------------------------------------------------------------------
 # The whole workflow is driven through pixi:
@@ -24,16 +36,18 @@ cmd = "test -d src/twist_stamper || git clone --depth 1 https://github.com/joshn
 [tasks.build]
 description = "Build the ROS 2 workspace with colcon"
 depends-on = ["fetch-deps"]
-cmd = "colcon build --symlink-install --event-handlers console_direct+"
+# scripts/pixi-run.sh strips any leaked system ROS (/opt/ros/*) so it cannot be
+# mixed with the RoboStack build (which crashes Gazebo with heap corruption).
+cmd = "bash scripts/pixi-run.sh colcon build --symlink-install --event-handlers console_direct+"
 
 [tasks.sim]
 description = "Build and launch the Perseus Gazebo simulation"
 depends-on = ["build"]
-cmd = "bash -c 'source install/setup.bash && ros2 launch perseus_simulation perseus_sim.launch.py'"
+cmd = "bash scripts/pixi-run.sh bash -c 'source install/setup.bash && ros2 launch perseus_simulation perseus_sim.launch.py'"
 
 [tasks.teleop]
 description = "Drive the rover with the keyboard (run in a second terminal)"
-cmd = "ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=true"
+cmd = "bash scripts/pixi-run.sh bash -c 'source install/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=true'"
 
 [tasks.clean]
 description = "Remove colcon build/install/log artifacts"

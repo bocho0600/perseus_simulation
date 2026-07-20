@@ -6,9 +6,11 @@ The environment (ROS 2 Jazzy + Gazebo) is fully managed by [pixi](https://pixi.s
 using the [RoboStack](https://robostack.github.io/) conda channels. No system ROS
 installation is required, and there is no longer a nix devshell.
 
-> **Note:** do **not** `source /opt/ros/*/setup.bash` before running pixi — a
-> system ROS environment leaking in can conflict with the RoboStack packages.
-> Run the pixi commands from a clean shell.
+> **Note:** avoid `source /opt/ros/*/setup.bash` (e.g. the `a` alias) in the
+> shell you run pixi from — a system ROS leaking in conflicts with the RoboStack
+> packages and crashes Gazebo. The pixi tasks defend against this automatically
+> via `scripts/pixi-run.sh` (which strips any `/opt/ros/*` paths), but running
+> from a clean shell is still the cleanest option.
 
 ## One-time setup
 

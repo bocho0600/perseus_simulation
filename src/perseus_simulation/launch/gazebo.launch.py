@@ -63,10 +63,17 @@ def generate_launch_description():
     model_path = os.path.join(
         get_package_share_directory("perseus_simulation"), "models"
     )
+    # Prepend our models dir to any inherited GZ_SIM_RESOURCE_PATH rather than
+    # overwriting it, so meshes provided by other packages (e.g.
+    # realsense2_description under the pixi/conda prefix) still resolve.
+    existing_resource_path = os.environ.get("GZ_SIM_RESOURCE_PATH", "")
+    resource_path = os.pathsep.join(
+        p for p in (model_path, existing_resource_path) if p
+    )
     set_env = [
         SetEnvironmentVariable("PROJ_IGNORE_CELESTIAL_BODY", "YES"),
         # Ensure the model path is set correctly for Gazebo
-        SetEnvironmentVariable("GZ_SIM_RESOURCE_PATH", model_path),
+        SetEnvironmentVariable("GZ_SIM_RESOURCE_PATH", resource_path),
     ]
 
     # IMPORTED LAUNCH FILES
