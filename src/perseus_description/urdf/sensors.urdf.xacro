@@ -57,7 +57,9 @@
   </material>
   <sensor name="${prefix}lidar_sensor" type="gpu_lidar">
     <topic>scan_3d</topic>
-    <update_rate>50</update_rate>
+    <!-- MID-360 frame rate is 10 Hz typical; 720x32 samples at 10 Hz gives
+         230k points/s, close to the real 200k points/s (first return) -->
+    <update_rate>10</update_rate>
     <always_on>false</always_on>
     <visualize>false</visualize>
     <ray>
@@ -76,8 +78,10 @@
         </vertical>
       </scan>
       <range>
-        <min>0.20</min>
-        <max>30.0</max>
+        <!-- 0.1 m close-proximity blind zone; 40 m @ 10% reflectivity
+             (70 m @ 80%, but 40 m is the figure to plan coverage against) -->
+        <min>0.1</min>
+        <max>40.0</max>
         <resolution>0.013</resolution>
       </range>
     </ray>
@@ -92,34 +96,13 @@
     <diffuse>0.0 0.0 1.0 1</diffuse>
     <specular>0.0 0.0 1.0 1</specular>
   </material>
-  <sensor name="${prefix}laser_2d_sensor" type="gpu_lidar">
-    <topic>scan</topic>
-    <update_rate>10</update_rate>
-    <always_on>true</always_on>
-    <visualize>false</visualize>
-    <ray>
-      <scan>
-        <horizontal>
-          <samples>720</samples>
-          <resolution>1</resolution>
-          <min_angle>-3.14159</min_angle>
-          <max_angle>3.14159</max_angle>
-        </horizontal>
-        <!-- Single horizontal plane for 2D scanning -->
-        <vertical> 
-          <samples>1</samples>
-          <min_angle>0.0</min_angle>
-          <max_angle>0.0</max_angle>
-        </vertical>
-      </scan>
-      <range>
-        <min>0.05</min>
-        <max>200.0</max>
-        <resolution>0.01</resolution>
-      </range>
-    </ray>
-    <gz_frame_id>${prefix}laser_2d_frame</gz_frame_id>
-  </sensor>
+  <!--
+    No gpu_lidar sensor here on purpose. A 360 deg gpu_lidar costs roughly 400 ms
+    per frame on this machine regardless of ray count, and a second one drops the
+    real-time factor to ~0.2 without adding anything SLAM needs. The link is kept
+    so the TF tree and rviz configs are unchanged; re-add a <sensor> block here if
+    a 2D scan is ever actually required.
+  -->
 </gazebo>
 
 
@@ -127,7 +110,9 @@
     <material>Gazebo/Grey</material>
     <sensor name="${prefix}lidar_imu" type="imu">
         <always_on>1</always_on>
-        <update_rate>10</update_rate>
+        <!-- the MID-360's built-in ICM40609 pushes IMU at 200 Hz by default;
+             FAST-LIO needs that rate to de-skew and propagate between scans -->
+        <update_rate>200</update_rate>
         <visualize>true</visualize>
         <topic>/scan_3d/imu</topic>
         <!-- Add frame id to imu sensor (achieving correct frame association)-->
