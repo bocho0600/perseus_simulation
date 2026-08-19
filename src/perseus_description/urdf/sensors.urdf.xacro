@@ -1,52 +1,11 @@
 <?xml version="1.0"?>
 <robot name="lidar" xmlns:xacro="http://ros.org/wiki/xacro">
 
-<!-- 3D LIDAR (Existing - Livox MID-360) -->
-<link name="${prefix}livox_frame">
-    <inertial>
-        <origin xyz="0 0.0 0.0" rpy="${pi/2} 0.0 ${pi}"/>
-        <mass value="${livox_mass}"/>
-        <xacro:box_inertia m="${livox_mass}" x="${livox_length}" y="${livox_radius}" z="${livox_radius}"/>
-    </inertial>
-    <visual>
-        <origin xyz="0 0.0 -0.02" rpy="${pi/2} 0.0 ${pi}"/>
-        <geometry>
-            <mesh scale="1.0 1.0  1.0" filename="file://$(find perseus_description)/meshes/mid-360.dae"/>
-        </geometry>
-        <material name="black"/>
-    </visual>
-    <collision>
-        <origin xyz="0 0.0 -0.02" rpy="0.0 0.0 0.0"/>
-        <geometry>
-            <cylinder radius="${livox_radius}" length="${livox_length}"/>
-        </geometry>
-    </collision>
-</link>
-
-<!-- 2D LIDAR -->
-<link name="${prefix}laser_2d_frame">
-    <inertial>
-        <origin xyz="0 0 0"/>
-        <mass value="${laser_2d_mass}"/>
-        <xacro:box_inertia m="${laser_2d_mass}" x="${laser_2d_length}" y="${laser_2d_radius}" z="${laser_2d_radius}"/>
-    </inertial>
-
-    <visual>
-        <origin xyz="0 0 0"/>
-        <geometry>
-            <cylinder radius="${laser_2d_radius}" length="${laser_2d_length}"/>
-        </geometry>
-        <material name="blue">
-            <color rgba="0.0 0.0 1.0 1.0"/>
-        </material>
-    </visual>
-    <collision>
-        <geometry>
-            <cylinder radius="0.04" length="0.04"/>
-        </geometry>
-    </collision>
-</link>
-
+<!--
+  Gazebo sensors for the Livox MID-360. The livox_frame link itself is declared in
+  sensor_mount.urdf.xacro, next to the mast it is mounted on; these blocks only attach
+  simulated hardware to it by name.
+-->
 
 <!-- Simulating the Livox MID-360 -->
 <gazebo reference="${prefix}livox_frame">
@@ -87,22 +46,6 @@
     </ray>
     <gz_frame_id>${prefix}livox_frame</gz_frame_id>
   </sensor>
-</gazebo>
-
-<!-- 2D LIDAR SENSOR (Traditional 2D Laser Scanner) -->
-<gazebo reference="${prefix}laser_2d_frame">
-  <material>
-    <ambient>0.0 0.0 1.0 1</ambient>
-    <diffuse>0.0 0.0 1.0 1</diffuse>
-    <specular>0.0 0.0 1.0 1</specular>
-  </material>
-  <!--
-    No gpu_lidar sensor here on purpose. A 360 deg gpu_lidar costs roughly 400 ms
-    per frame on this machine regardless of ray count, and a second one drops the
-    real-time factor to ~0.2 without adding anything SLAM needs. The link is kept
-    so the TF tree and rviz configs are unchanged; re-add a <sensor> block here if
-    a 2D scan is ever actually required.
-  -->
 </gazebo>
 
 
