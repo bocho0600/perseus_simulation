@@ -103,6 +103,32 @@
       <origin xyz="${-0.038} 0.0 0.064" rpy="0.0 0.0 0.0"/>
     </joint>
 
+    <!--
+      The IMU inside the Livox housing, and where the Gazebo imu sensor is attached (see
+      sensors.urdf.xacro). A pure frame: no visual, no collision, no inertial, because
+      nothing about the robot's mass or appearance depends on it.
+
+      The MID-360 datasheet puts the IMU at (11.0, 23.29, -44.12) mm from the LiDAR origin,
+      in LiDAR coordinates, with no rotation between them. Modelling it here rather than
+      leaving the simulated IMU sitting exactly on livox_frame does two things: the
+      simulator matches the real sensor, and BIEVR-LIO can read the extrinsic back out of
+      TF (calibration.from_tf) in simulation exactly as it does on the robot, instead of
+      needing a separate identity extrinsic stated in the sim config.
+
+      Kept identical to the same joint in perseus-v3's description package, which is the
+      copy the real robot runs.
+
+      Note the sign. The LIO configs express this extrinsic the other way round, as the
+      LiDAR origin in IMU coordinates, so they carry the negation of these numbers.
+    -->
+    <link name="${prefix}livox_imu_frame"/>
+
+    <joint name="${prefix}livox_imu_joint" type="fixed">
+      <parent link="${prefix}livox_frame"/>
+      <child link="${prefix}livox_imu_frame"/>
+      <origin xyz="0.011 0.02329 ${-0.04412}" rpy="0.0 0.0 0.0"/>
+    </joint>
+
     <!-- RealSense D455, on the front face of the mast, looking straight ahead -->
     <xacro:sensor_d455 parent="${prefix}sensor_mount" name="camera" use_nominal_extrinsics="true">
       <origin xyz="0.035 0.0 0.006" rpy="0.0 0.0 0.0"/>
