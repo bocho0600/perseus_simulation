@@ -1,0 +1,201 @@
+<?xml version='1.0'?>
+<!--
+  Visual-only zone markers for the 2026 Lunabotics arena, traced from Figure 2
+  of the guidebook.  Origin is the guidebook Origin Point: centre of the front
+  (south) wall, +X east, +Y north.
+
+    Excavation zone    Y 0.00 - 3.00, full 9.14 m width (overlaps starting zone)
+    Obstacle zone      Y 3.00 - 8.10, full 9.14 m width
+    Starting zone      X -2.25 - 0.00, Y 0.00 - 2.25   (green)
+    Construction zone  X  2.52 - 4.57, Y 4.69 - 8.10   (orange)
+    Target berm area   X  3.11 - 4.01, Y 5.30 - 7.50   (red), 0.9 m x 2.2 m
+                       centred on (3.56, 6.40) per the Figure 2 callout
+
+  These links have no <collision>, so the rover drives straight through them -
+  they are there to sanity-check navigation goals, not to constrain motion.
+-->
+<sdf version='1.8'>
+  <model name='lunabotics_zones'>
+    <pose>0 0 0 0 0 0</pose>
+    <static>true</static>
+
+    <!-- excavation obstacle divider -->
+    <link name='excavation_obstacle_divider_divider'>
+      <pose>0 3 0.08 0 0 0</pose>
+      <visual name='excavation_obstacle_divider_divider_visual'>
+        <geometry>
+          <box>
+            <size>9.17 0.03 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.05 0.05 0.05 0.65</ambient>
+          <diffuse>0.05 0.05 0.05 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.02 0.02 0.02 1</emissive>
+        </material>
+      </visual>
+    </link>
+
+    <!-- starting zone -->
+    <link name='starting_zone_start_w'>
+      <pose>-2.25 1.125 0.08 0 0 0</pose>
+      <visual name='starting_zone_start_w_visual'>
+        <geometry>
+          <box>
+            <size>0.03 2.28 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.1 0.7 0.2 0.65</ambient>
+          <diffuse>0.1 0.7 0.2 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.04 0.28 0.08 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <link name='starting_zone_start_n'>
+      <pose>-1.125 2.25 0.08 0 0 0</pose>
+      <visual name='starting_zone_start_n_visual'>
+        <geometry>
+          <box>
+            <size>2.28 0.03 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.1 0.7 0.2 0.65</ambient>
+          <diffuse>0.1 0.7 0.2 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.04 0.28 0.08 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <link name='starting_zone_start_e'>
+      <pose>0 1.125 0.08 0 0 0</pose>
+      <visual name='starting_zone_start_e_visual'>
+        <geometry>
+          <box>
+            <size>0.03 2.28 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.1 0.7 0.2 0.65</ambient>
+          <diffuse>0.1 0.7 0.2 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.04 0.28 0.08 1</emissive>
+        </material>
+      </visual>
+    </link>
+
+    <!-- construction zone -->
+    <link name='construction_zone_cons_s'>
+      <pose>3.545 4.69 0.08 0 0 0</pose>
+      <visual name='construction_zone_cons_s_visual'>
+        <geometry>
+          <box>
+            <size>2.08 0.03 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.95 0.55 0.05 0.65</ambient>
+          <diffuse>0.95 0.55 0.05 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.38 0.22 0.02 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <link name='construction_zone_cons_w'>
+      <pose>2.52 6.395 0.08 0 0 0</pose>
+      <visual name='construction_zone_cons_w_visual'>
+        <geometry>
+          <box>
+            <size>0.03 3.44 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.95 0.55 0.05 0.65</ambient>
+          <diffuse>0.95 0.55 0.05 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.38 0.22 0.02 1</emissive>
+        </material>
+      </visual>
+    </link>
+
+    <!-- berm target -->
+    <link name='berm_target_berm_s'>
+      <pose>3.56 5.3 0.08 0 0 0</pose>
+      <visual name='berm_target_berm_s_visual'>
+        <geometry>
+          <box>
+            <size>0.93 0.03 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.85 0.05 0.05 0.65</ambient>
+          <diffuse>0.85 0.05 0.05 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.34 0.02 0.02 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <link name='berm_target_berm_n'>
+      <pose>3.56 7.5 0.08 0 0 0</pose>
+      <visual name='berm_target_berm_n_visual'>
+        <geometry>
+          <box>
+            <size>0.93 0.03 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.85 0.05 0.05 0.65</ambient>
+          <diffuse>0.85 0.05 0.05 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.34 0.02 0.02 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <link name='berm_target_berm_w'>
+      <pose>3.11 6.4 0.08 0 0 0</pose>
+      <visual name='berm_target_berm_w_visual'>
+        <geometry>
+          <box>
+            <size>0.03 2.23 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.85 0.05 0.05 0.65</ambient>
+          <diffuse>0.85 0.05 0.05 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.34 0.02 0.02 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <link name='berm_target_berm_e'>
+      <pose>4.01 6.4 0.08 0 0 0</pose>
+      <visual name='berm_target_berm_e_visual'>
+        <geometry>
+          <box>
+            <size>0.03 2.23 0.25</size>
+          </box>
+        </geometry>
+        <transparency>0.35</transparency>
+        <material>
+          <ambient>0.85 0.05 0.05 0.65</ambient>
+          <diffuse>0.85 0.05 0.05 0.65</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0.34 0.02 0.02 1</emissive>
+        </material>
+      </visual>
+    </link>
+
+  </model>
+</sdf>

@@ -1,30 +1,65 @@
 <?xml version="1.0" ?>
+<!--
+  Regolith surface for the Lunabotics arena.
+
+  Squeezed from the original 26 x 30.5 m footprint down to the 9.44 x 8.40 m
+  outer footprint of the UCF regolith bin (the 9.14 x 8.10 m bed plus the
+  0.15 m wall on each side, so the terrain tucks under the walls with no gap),
+  and re-centred on the bed, whose centre is (0, 4.05) in the guidebook Origin
+  Point frame.
+
+  Three things about gz heightmaps that this file depends on, all confirmed by
+  dropping probe bodies onto the terrain in gz-sim (Jazzy / gz-sim 8):
+
+  1. <pos> is NOT applied to the collision heightmap - only the visual honours
+     it, so a <pos> offset silently puts the collision terrain somewhere the
+     visual terrain is not.  Both <pos> values are therefore left at zero and
+     the whole offset lives in the model <pose>, which both honour.
+
+  2. The rendered footprint comes out at (n-1)/n of the requested <size>, with
+     n = 33 samples for this DEM.  9.735 x 8.663 x 32/33 = 9.44 x 8.40 m.
+
+  3. The third <size> component scales the relief linearly: the surface ends up
+     at minElevation + normalisedHeight * size_z, i.e. spanning size_z metres
+     from the DEM's low point.  moon.tif has minElevation = -212.296 m, so the
+     model <pose> Z of 212.084 puts the mean surface height at world z = 0
+     (surface range -0.21 m to +0.09 m).
+
+  size_z was 1 before the squeeze.  Kept at 1 it would put a 1 m dune inside a
+  9 m competition bin, so it is dropped to 0.30 for a gently undulating bed;
+  the guidebook's craters and boulders are the real relief.  If you change it,
+  move the <pose> Z with it to keep grade at zero: pose_z = 212.296 - 0.707 * size_z.
+
+  Note: the 40-50 cm craters of guidebook section 3.1 are NOT modelled.
+  moon.tif is only 33 x 33 samples, i.e. ~0.29 x 0.25 m per cell at this size,
+  so a crater would be two cells wide - adding them means replacing the raster.
+-->
 <sdf version="1.9">
   <model name="moon">
     <static>true</static>
-    <pose>0 0 211.5 0 0 0</pose>
+    <pose>0 4.05 212.084 0 0 0</pose>
     <link name="link">
       <collision name="collision">
         <geometry>
           <heightmap>
             <uri>dem/moon.tif</uri>
-            <size>26 30.5 1</size>
+            <size>9.735 8.663 0.30</size>
             <pos>0 0 0</pos>
           </heightmap>
         </geometry>
       </collision>
       <visual name="visual">
-        <geometry> 
+        <geometry>
           <heightmap>
             <use_terrain_paging>false</use_terrain_paging>
             <texture>
               <diffuse>materials/textures/sand.jpg</diffuse>
               <normal>materials/textures/moon_normal.png</normal>
-              <size>10</size>
+              <size>2</size>
             </texture>
             <uri>dem/moon.tif</uri>
-            <size>26 30.5 1</size>
-            <pos>0 0 211.5</pos>
+            <size>9.735 8.663 0.30</size>
+            <pos>0 0 0</pos>
             <sampling>2</sampling> <!-- Sampling rate for the heightmap -->
           </heightmap>
         </geometry>

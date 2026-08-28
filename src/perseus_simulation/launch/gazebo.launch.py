@@ -37,24 +37,31 @@ def generate_launch_description():
             ),
             description="The world file from `perseus_simulation` to use",
         ),
+        # Default spawn is the centre of the Lunabotics starting zone, facing
+        # north into the arena. The world frame matches the guidebook Origin
+        # Point (centre of the front wall), so the starting zone is
+        # X -2.25..0.00, Y 0.00..2.25 and its centre is (-1.125, 1.125).
+        # The guidebook has the robot placed in a randomly selected starting
+        # position and direction within that zone, so override these to
+        # rehearse other draws.
         DeclareLaunchArgument(
             "initial_pose_x",
-            default_value="-3.5",
+            default_value="-1.125",
             description="Initial X position of the robot",
         ),
         DeclareLaunchArgument(
             "initial_pose_y",
-            default_value="-3.0",
+            default_value="1.125",
             description="Initial Y position of the robot",
         ),
         DeclareLaunchArgument(
             "initial_pose_z",
-            default_value="0.3",
+            default_value="0.35",
             description="Initial Z position of the robot",
         ),
         DeclareLaunchArgument(
             "initial_pose_yaw",
-            default_value="0.0",
+            default_value="1.5708",
             description="Initial yaw of the robot",
         ),
     ]

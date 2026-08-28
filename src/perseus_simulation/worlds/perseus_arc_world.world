@@ -1,4 +1,23 @@
 <?xml version="1.0"?>
+<!--
+  Perseus simulation world laid out as the UCF Exolith Lab arena used for the
+  2026 NASA International Lunabotics Championship (guidebook v1, Aug 2026).
+
+  World frame == guidebook Origin Point frame:
+    origin = centre of the front (south) arena wall, at grade
+    +X     = east, +Y = north (into the arena)
+
+    regolith bed       X -4.57 .. 4.57, Y 0.00 .. 8.10   (9.14 m x 8.10 m)
+    excavation zone    Y 0.00 .. 3.00   (includes the starting zone)
+    obstacle zone      Y 3.00 .. 8.10
+    starting zone      X -2.25 .. 0.00, Y 0.00 .. 2.25
+    construction zone  X  2.52 .. 4.57, Y 4.69 .. 8.10
+    target berm area   X  3.11 .. 4.01, Y 5.30 .. 7.50, centre (3.56, 6.40)
+    judge platform     Y 8.10 .. 9.10
+
+  Guidebook coordinates therefore drop straight into this world - e.g. the berm
+  target centre is nav goal (3.56, 6.40).
+-->
 <sdf version="1.8">
   <world name="perseus_arc_world">
 
@@ -45,12 +64,9 @@
       </ode>
     </physics>
 
-
-
-
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
-      <pose>0 0 10 0 0 0</pose>
+      <pose>0 4 10 0 0 0</pose>
       <diffuse>0.8 0.8 0.8 1</diffuse>
       <specular>0.2 0.2 0.2 1</specular>
       <attenuation>
@@ -63,104 +79,26 @@
     </light>
     <ambient>1 1 1 1</ambient>
     <background>1 1 1 1</background>
-    
+
+    <!-- Regolith bin walls, judge platform and 80/20 fiducial rail -->
     <include>
       <uri>model://perseus_arc_world</uri>
-    </include> 
-    <include>
-      <uri>model://perseus_arc_world/aruco_markers1</uri>
-      <pose>6 11.5 0.5 0 0 3.14</pose>
-    </include>
-    <include>
-      <uri>model://perseus_arc_world/aruco_markers2</uri>
-      <pose>7 -9.75 0.5 0 0 -2.35</pose>
-    </include>
-    <include>
-      <uri>model://perseus_arc_world/aruco_markers3</uri>
-      <pose>2 1 0.5 0 0 0.78</pose>
-    </include>
-    <include>
-      <uri>model://perseus_arc_world/aruco_markers4</uri>
-      <pose>-2 5.5 0.5 0 0 1.57</pose>
-    </include>
-    <include>
-      <uri>model://perseus_arc_world/aruco_markers5</uri>
-      <pose>-5.5 -9.75 0.5 0 0 3.1412</pose>
     </include>
 
+    <!-- Visual-only excavation / obstacle / starting / construction / berm outlines -->
     <include>
-      <uri>model://perseus_arc_world/cubes</uri>
+      <uri>model://lunabotics_zones</uri>
     </include>
 
-    <!-- Lunar Ground -->
+    <!-- Regolith surface (squeezed DEM) -->
     <include>
       <uri>model://Moon_DEM</uri>
     </include>
 
-    <!-- Falling Rock 1 (3x) -->
+    <!-- 30-40 cm boulder obstacles, section 3.1 -->
     <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling Rock 1</uri>
-      <name>falling_rock_1_a</name>
-      <pose>-6.42  3.17  0  0  0  1.36</pose>
+      <uri>model://lunabotics_boulders</uri>
     </include>
-
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling Rock 1</uri>
-      <name>falling_rock_1_b</name>
-      <pose>4.88 -7.54  0  0  0 -2.11</pose>
-    </include>
-
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling Rock 1</uri>
-      <name>falling_rock_1_c</name>
-      <pose>1.23  8.06  0  0  0  0.44</pose>
-    </include>
-
-
-    <!-- Falling Rock 2 (3x) -->
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling Rock 2</uri>
-      <name>falling_rock_2_a</name>
-      <pose>-8.71 -2.96  0  0  0 -1.57</pose>
-    </include>
-
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling Rock 2</uri>
-      <name>falling_rock_2_b</name>
-      <pose>7.95  2.41  0  0  0  2.62</pose>
-    </include>
-
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling Rock 2</uri>
-      <name>falling_rock_2_c</name>
-      <pose>0.47  1.32  0  0  0  1.94</pose>
-    </include>
-
-
-    <!-- Falling Rock 4 (3x) -->
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling Rock 4</uri>
-      <name>falling_rock_4_a</name>
-      <pose>8.36 -5.12  0  0  0  1.88</pose>
-    </include>
-
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling Rock 4</uri>
-      <name>falling_rock_4_b</name>
-      <pose>-5.44 -8.09  0  0  0 -2.83</pose>
-    </include>
-
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling Rock 4</uri>
-      <name>falling_rock_4_c</name>
-      <pose>3.29  0.74  0  0  0  0.12</pose>
-    </include>
-
-
-    <!-- Flat Ground -->
-    <!-- <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane</uri>
-    </include>  -->
 
   </world>
 </sdf>
