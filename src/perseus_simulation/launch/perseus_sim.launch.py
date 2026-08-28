@@ -166,7 +166,7 @@ def generate_launch_description():
         ekf_delayed,
         rosbridge_launch,
         twist_mux_launch,
-        rviz,
+        # rviz,
     ]
 
     return LaunchDescription(arguments + launch_files)
