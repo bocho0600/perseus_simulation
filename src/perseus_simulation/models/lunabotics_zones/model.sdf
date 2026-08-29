@@ -1,8 +1,8 @@
 <?xml version='1.0'?>
 <!--
-  Visual-only zone markers for the 2026 Lunabotics arena, traced from Figure 2
-  of the guidebook.  Origin is the guidebook Origin Point: centre of the front
-  (south) wall, +X east, +Y north.
+  Zone markers for the 2026 Lunabotics arena, traced from Figure 2 of the
+  guidebook.  Origin is the guidebook Origin Point: centre of the front (south)
+  wall, +X east, +Y north.
 
     Excavation zone    Y 0.00 - 3.00, full 9.14 m width (overlaps starting zone)
     Obstacle zone      Y 3.00 - 8.10, full 9.14 m width
@@ -11,8 +11,21 @@
     Target berm area   X  3.11 - 4.01, Y 5.30 - 7.50   (red), 0.9 m x 2.2 m
                        centred on (3.56, 6.40) per the Figure 2 callout
 
-  These links have no <collision>, so the rover drives straight through them -
-  they are there to sanity-check navigation goals, not to constrain motion.
+  These are annotations, not arena hardware, so they must not reach perception:
+
+    - No <collision>, so the rover drives straight through them.
+    - <visibility_flags>1</visibility_flags> keeps them out of the rover's
+      sensors.  gz renders a visual for a sensor when
+      (sensor visibility_mask & visual visibility_flags) is non-zero, and both
+      default to 0xFFFFFFFF - so a visual with no collision is still perfectly
+      visible to a gpu_lidar or camera, which range against rendered geometry.
+      Bit 0 is reserved here as a GUI-only annotation layer: these visuals set
+      that bit and nothing else, and every sensor in perseus_description masks
+      it out with visibility_mask 0x0FFFFFFE.  The Gazebo GUI camera uses the
+      default all-ones mask, so it still draws them.
+
+  Add a marker and it is invisible to sensors automatically; add a SENSOR and
+  you must give it the 0x0FFFFFFE mask or it will start seeing the outlines.
 -->
 <sdf version='1.8'>
   <model name='lunabotics_zones'>
@@ -29,6 +42,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.05 0.05 0.05 0.65</ambient>
           <diffuse>0.05 0.05 0.05 0.65</diffuse>
@@ -48,6 +63,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.1 0.7 0.2 0.65</ambient>
           <diffuse>0.1 0.7 0.2 0.65</diffuse>
@@ -65,6 +82,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.1 0.7 0.2 0.65</ambient>
           <diffuse>0.1 0.7 0.2 0.65</diffuse>
@@ -82,6 +101,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.1 0.7 0.2 0.65</ambient>
           <diffuse>0.1 0.7 0.2 0.65</diffuse>
@@ -101,6 +122,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.95 0.55 0.05 0.65</ambient>
           <diffuse>0.95 0.55 0.05 0.65</diffuse>
@@ -118,6 +141,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.95 0.55 0.05 0.65</ambient>
           <diffuse>0.95 0.55 0.05 0.65</diffuse>
@@ -137,6 +162,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.85 0.05 0.05 0.65</ambient>
           <diffuse>0.85 0.05 0.05 0.65</diffuse>
@@ -154,6 +181,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.85 0.05 0.05 0.65</ambient>
           <diffuse>0.85 0.05 0.05 0.65</diffuse>
@@ -171,6 +200,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.85 0.05 0.05 0.65</ambient>
           <diffuse>0.85 0.05 0.05 0.65</diffuse>
@@ -188,6 +219,8 @@
           </box>
         </geometry>
         <transparency>0.35</transparency>
+        <!-- GUI-only annotation layer; see the header comment. -->
+        <visibility_flags>1</visibility_flags>
         <material>
           <ambient>0.85 0.05 0.05 0.65</ambient>
           <diffuse>0.85 0.05 0.05 0.65</diffuse>

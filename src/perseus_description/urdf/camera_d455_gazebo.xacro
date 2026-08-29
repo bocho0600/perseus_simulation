@@ -19,6 +19,13 @@
             <near>0.05</near>
             <far>10.0</far>
           </clip>
+          <!--
+            0x0FFFFFFE: everything except bit 0, which lunabotics_zones uses for
+            its GUI-only zone outlines. Without this the sensor ranges against
+            those annotation visuals - they have no collision, but gz sensors see
+            rendered geometry, not collision geometry.
+          -->
+          <visibility_mask>268435454</visibility_mask>
         </camera>
         <topic>/${name}/${name}/color</topic>
         <gz_frame_id>${name}_color_optical_frame</gz_frame_id>
@@ -42,6 +49,13 @@
             <near>0.05</near>
             <far>10.0</far>
           </clip>
+          <!--
+            0x0FFFFFFE: everything except bit 0, which lunabotics_zones uses for
+            its GUI-only zone outlines. Without this the sensor ranges against
+            those annotation visuals - they have no collision, but gz sensors see
+            rendered geometry, not collision geometry.
+          -->
+          <visibility_mask>268435454</visibility_mask>
         </camera>
         <topic>/${name}/${name}/depth</topic>
         <gz_frame_id>${name}_depth_optical_frame</gz_frame_id>
@@ -67,6 +81,13 @@
             <near>0.05</near>
             <far>100</far>
           </clip>
+          <!--
+            0x0FFFFFFE: everything except bit 0, which lunabotics_zones uses for
+            its GUI-only zone outlines. Without this the sensor ranges against
+            those annotation visuals - they have no collision, but gz sensors see
+            rendered geometry, not collision geometry.
+          -->
+          <visibility_mask>268435454</visibility_mask>
         </camera>
         <topic>/${name}/${name}/infra1/image_raw</topic>
         <gz_frame_id>${name}_infra1_optical_frame</gz_frame_id>
@@ -91,6 +112,13 @@
             <near>0.05</near>
             <far>100</far>
           </clip>
+          <!--
+            0x0FFFFFFE: everything except bit 0, which lunabotics_zones uses for
+            its GUI-only zone outlines. Without this the sensor ranges against
+            those annotation visuals - they have no collision, but gz sensors see
+            rendered geometry, not collision geometry.
+          -->
+          <visibility_mask>268435454</visibility_mask>
         </camera>
         <topic>/${name}/${name}/infra2/image_raw</topic>
         <gz_frame_id>${name}_infra2_optical_frame</gz_frame_id>
