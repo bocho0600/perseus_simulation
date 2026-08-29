@@ -39,4 +39,16 @@ for v in AMENT_PREFIX_PATH AMENT_CURRENT_PREFIX CMAKE_PREFIX_PATH \
   strip_ros "$v"
 done
 
+# Point Fast DDS at the large-data transport profile. /livox/lidar is 737 KB per
+# message (720 x 32 points x 32 bytes) at 10 Hz, which does not fit Fast DDS's
+# default shared-memory segment, so every cloud fell back to fragmented UDP and
+# roughly half of them were lost: the gz topic published 9.8 Hz while ROS
+# subscribers saw ~5.5 Hz with gaps over a second. Respects an existing value so
+# you can override it.
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+dds_profile="$repo_root/src/perseus_simulation/config/fastdds_large_data.xml"
+if [ -z "${FASTRTPS_DEFAULT_PROFILES_FILE:-}" ] && [ -f "$dds_profile" ]; then
+  export FASTRTPS_DEFAULT_PROFILES_FILE="$dds_profile"
+fi
+
 exec "$@"
