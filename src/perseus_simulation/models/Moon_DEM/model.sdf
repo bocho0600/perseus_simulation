@@ -1,50 +1,62 @@
 <?xml version="1.0" ?>
 <!--
-  Regolith surface for the Lunabotics arena.
+  Regolith surface for the Lunabotics arena: 9.44 x 8.40 m, the 9.14 x 8.10 m
+  bed plus the 0.15 m wall on each side so the terrain tucks under the walls
+  with no gap, centred on the bed at (0, 4.05) in the guidebook Origin Point
+  frame, with mean grade at world z = 0.
 
-  Squeezed from the original 26 x 30.5 m footprint down to the 9.44 x 8.40 m
-  outer footprint of the UCF regolith bin (the 9.14 x 8.10 m bed plus the
-  0.15 m wall on each side, so the terrain tucks under the walls with no gap),
-  and re-centred on the bed, whose centre is (0, 4.05) in the guidebook Origin
-  Point frame.
+  READ THIS BEFORE MOVING THE TERRAIN.  gz-sim places the two heightmap paths
+  from different fields, and neither one alone moves both:
 
-  Three things about gz heightmaps that this file depends on, all confirmed by
-  dropping probe bodies onto the terrain in gz-sim (Jazzy / gz-sim 8):
+      collision  uses the model <pose>,  IGNORES <pos>
+      visual     uses <pos>,             IGNORES the model <pose>
 
-  1. <pos> is NOT applied to the collision heightmap - only the visual honours
-     it, so a <pos> offset silently puts the collision terrain somewhere the
-     visual terrain is not.  Both <pos> values are therefore left at zero and
-     the whole offset lives in the model <pose>, which both honour.
+  So the offset has to be written twice - once in the model <pose> for the
+  collision, once in the visual's <pos> - and the two must be kept identical.
+  Set only one and you get solid ground with nothing drawn on it, or sand you
+  drive straight through.  (Verified by dropping bodies onto the collision
+  surface and ranging the visual with a downward gpu_lidar at 13 points across
+  the bed: the two now agree everywhere.)
 
-  2. The rendered footprint comes out at (n-1)/n of the requested <size>, with
-     n = 33 samples for this DEM.  9.735 x 8.663 x 32/33 = 9.44 x 8.40 m.
+  The terrain source also changed.  It used to be dem/moon.tif driven from its
+  GeoTIFF elevations, which cannot survive being squeezed to arena scale: those
+  elevations are around -212 m, and the collision path rebases to the DEM
+  minimum while the visual path keeps the raw value, so the two are 212 m apart
+  before any offset is applied at all.
 
-  3. The third <size> component scales the relief linearly: the surface ends up
-     at minElevation + normalisedHeight * size_z, i.e. spanning size_z metres
-     from the DEM's low point.  moon.tif has minElevation = -212.296 m, so the
-     model <pose> Z of 212.084 puts the mean surface height at world z = 0
-     (surface range -0.21 m to +0.09 m).
+  dem/regolith_heightmap.png is the same terrain shape resampled to 129 x 129
+  (gz image heightmaps must be square with a side of 2^k + 1) and normalised to
+  0..1.  An image heightmap has no elevation offset for the two paths to
+  disagree about - heights simply run from 0 to the third <size> component.
 
-  size_z was 1 before the squeeze.  Kept at 1 it would put a 1 m dune inside a
-  9 m competition bin, so it is dropped to 0.30 for a gently undulating bed;
-  the guidebook's craters and boulders are the real relief.  If you change it,
-  move the <pose> Z with it to keep grade at zero: pose_z = 212.296 - 0.707 * size_z.
+  Relief is 0.30 m rather than the 1 m of the pre-squeeze world, which is a
+  regolith bed rather than a dune at 9 m across; the guidebook's craters and
+  boulders are the real relief.  The raster's mean normalised height is 0.7067,
+  so an offset of -0.212 (= -0.7067 * 0.30) puts mean grade at world z = 0.
+  If you change the relief, move both Z offsets with it.
 
-  Note: the 40-50 cm craters of guidebook section 3.1 are NOT modelled.
-  moon.tif is only 33 x 33 samples, i.e. ~0.29 x 0.25 m per cell at this size,
-  so a crater would be two cells wide - adding them means replacing the raster.
+  The diffuse texture is regolith_diffuse.png, derived from moon_diffuse.png by
+  renormalising it to a light grey.  sand.jpg is a warm tan photo that visibly
+  blotches when tiled at this scale, and moon_diffuse.png tiles cleanly but has
+  a mean of 96/255, which renders as near-black under this world's lighting.
+  LHS-2E is a light grey highlands simulant, so the albedo is lifted to ~186.
+
+  Note: the 40-50 cm craters of guidebook section 3.1 are NOT modelled.  At
+  129 x 129 over 9.44 m the raster is fine enough to carve them in (~7 cm per
+  cell) if you want them.
 -->
 <sdf version="1.9">
   <model name="moon">
     <static>true</static>
-    <pose>0 4.05 212.084 0 0 0</pose>
+    <!-- Positions the COLLISION heightmap only; must match the visual <pos>. -->
+    <pose>0 4.05 -0.212 0 0 0</pose>
     <link name="link">
       <collision name="collision">
         <geometry>
           <heightmap>
-            <uri>dem/moon.tif</uri>
-            <size>9.735 8.663 0.30</size>
-            <pos>0 0 0</pos>
+            <uri>dem/regolith_heightmap.png</uri>
+            <size>9.44 8.40 0.30</size>
+            <pos>0 0 0</pos> <!-- ignored by the collision path; see above -->
           </heightmap>
         </geometry>
       </collision>
@@ -53,13 +65,14 @@
           <heightmap>
             <use_terrain_paging>false</use_terrain_paging>
             <texture>
-              <diffuse>materials/textures/sand.jpg</diffuse>
+              <diffuse>materials/textures/regolith_diffuse.png</diffuse>
               <normal>materials/textures/moon_normal.png</normal>
               <size>2</size>
             </texture>
-            <uri>dem/moon.tif</uri>
-            <size>9.735 8.663 0.30</size>
-            <pos>0 0 0</pos>
+            <uri>dem/regolith_heightmap.png</uri>
+            <size>9.44 8.40 0.30</size>
+            <!-- Positions the VISUAL heightmap only; must match the model <pose>. -->
+            <pos>0 4.05 -0.212</pos>
             <sampling>2</sampling> <!-- Sampling rate for the heightmap -->
           </heightmap>
         </geometry>

@@ -9,6 +9,8 @@
     +Y      = north (into the arena, away from the front wall)
 
   Regolith bed interior: 9.14 m (X) x 8.10 m (Y), X in [-4.57, 4.57].
+  Walls run from z = -0.35 to z = 0.50: grade is z = 0 but the bed dips ~0.21 m
+  below it, and the walls have to cover that or the terrain skirt shows under them.
   A 1.00 m judge platform sits north of the bed, Y in [8.10, 9.10],
   giving the ~9.14 x 9.10 m overall arena the guidebook rounds to "~10 x 10 m".
 -->
@@ -19,18 +21,18 @@
 
     <!-- Front (south) wall: carries the 80/20 fiducial rail, Y = 0 -->
     <link name='Wall_S'>
-      <pose>0 -0.075 0.25 0 0 0</pose>
+      <pose>0 -0.075 0.075 0 0 0</pose>
       <collision name='Wall_S_Collision'>
         <geometry>
           <box>
-            <size>9.44 0.15 0.5</size>
+            <size>9.44 0.15 0.85</size>
           </box>
         </geometry>
       </collision>
       <visual name='Wall_S_Visual'>
         <geometry>
           <box>
-            <size>9.44 0.15 0.5</size>
+            <size>9.44 0.15 0.85</size>
           </box>
         </geometry>
         <material>
@@ -43,18 +45,18 @@
 
     <!-- Rear (north) wall at the far edge of the regolith bed, Y = 8.10 -->
     <link name='Wall_N'>
-      <pose>0 8.175 0.25 0 0 0</pose>
+      <pose>0 8.175 0.075 0 0 0</pose>
       <collision name='Wall_N_Collision'>
         <geometry>
           <box>
-            <size>9.44 0.15 0.5</size>
+            <size>9.44 0.15 0.85</size>
           </box>
         </geometry>
       </collision>
       <visual name='Wall_N_Visual'>
         <geometry>
           <box>
-            <size>9.44 0.15 0.5</size>
+            <size>9.44 0.15 0.85</size>
           </box>
         </geometry>
         <material>
@@ -67,18 +69,18 @@
 
     <!-- West wall, X = -4.57 -->
     <link name='Wall_W'>
-      <pose>-4.645 4.05 0.25 0 0 1.5708</pose>
+      <pose>-4.645 4.05 0.075 0 0 1.5708</pose>
       <collision name='Wall_W_Collision'>
         <geometry>
           <box>
-            <size>8.10 0.15 0.5</size>
+            <size>8.10 0.15 0.85</size>
           </box>
         </geometry>
       </collision>
       <visual name='Wall_W_Visual'>
         <geometry>
           <box>
-            <size>8.10 0.15 0.5</size>
+            <size>8.10 0.15 0.85</size>
           </box>
         </geometry>
         <material>
@@ -91,18 +93,18 @@
 
     <!-- East wall, X = 4.57 (ingress side) -->
     <link name='Wall_E'>
-      <pose>4.645 4.05 0.25 0 0 1.5708</pose>
+      <pose>4.645 4.05 0.075 0 0 1.5708</pose>
       <collision name='Wall_E_Collision'>
         <geometry>
           <box>
-            <size>8.10 0.15 0.5</size>
+            <size>8.10 0.15 0.85</size>
           </box>
         </geometry>
       </collision>
       <visual name='Wall_E_Visual'>
         <geometry>
           <box>
-            <size>8.10 0.15 0.5</size>
+            <size>8.10 0.15 0.85</size>
           </box>
         </geometry>
         <material>
@@ -115,18 +117,18 @@
 
     <!-- Judge platform: 1.00 m deep strip north of the regolith bed -->
     <link name='Judge_Platform'>
-      <pose>0 8.60 0.25 0 0 0</pose>
+      <pose>0 8.60 0.075 0 0 0</pose>
       <collision name='Judge_Platform_Collision'>
         <geometry>
           <box>
-            <size>9.44 1.00 0.5</size>
+            <size>9.44 1.00 0.85</size>
           </box>
         </geometry>
       </collision>
       <visual name='Judge_Platform_Visual'>
         <geometry>
           <box>
-            <size>9.44 1.00 0.5</size>
+            <size>9.44 1.00 0.85</size>
           </box>
         </geometry>
         <material>

@@ -77,8 +77,17 @@
       </attenuation>
       <direction>-0.5 0.1 -0.9</direction>
     </light>
-    <ambient>1 1 1 1</ambient>
-    <background>1 1 1 1</background>
+    <!--
+      These have to live inside <scene>. As direct children of <world> they are
+      not valid SDF, gz warns "XML Element[ambient] ... not defined in SDF" and
+      drops them, which left the scene with no ambient light at all - the
+      regolith rendered nearly black however bright its texture was.
+    -->
+    <scene>
+      <ambient>0.55 0.55 0.55 1</ambient>
+      <background>0.80 0.82 0.85 1</background>
+      <shadows>true</shadows>
+    </scene>
 
     <!-- Regolith bin walls, judge platform and 80/20 fiducial rail -->
     <include>
