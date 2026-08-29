@@ -46,36 +46,23 @@
       </sensor>
     </gazebo>
 
-    <!-- Depth Camera -->
-    <gazebo reference="${name}_depth_frame">
-      <sensor name="depth_camera" type="depth_camera">
-        <pose>0 0 0 0 0 0</pose>
-        <visualize>false</visualize>
-        <update_rate>15</update_rate>
-        <always_on>false</always_on>
-        <camera>
-          <horizontal_fov>1.089</horizontal_fov>
-          <image>
-            <width>640</width>
-            <height>480</height>
-          </image>
-          <clip>
-            <near>0.05</near>
-            <far>10.0</far>
-          </clip>
-          <!--
-            0x0FFFFFFE: everything except bit 0, which lunabotics_zones uses for
-            its GUI-only zone outlines. Without this the sensor ranges against
-            those annotation visuals - they have no collision, but gz sensors see
-            rendered geometry, not collision geometry.
-          -->
-          <visibility_mask>268435454</visibility_mask>
-        </camera>
-        <topic>/${name}/${name}/depth</topic>
-        <gz_frame_id>${name}_depth_optical_frame</gz_frame_id>
-      </sensor>
-    </gazebo>
+    <!--
+      Standalone depth camera: REMOVED, not commented out.
 
+      It published /camera/camera/depth (bridged to depth/image_rect_raw,
+      depth/camera_info and depth/color/points) and nothing subscribed to any of
+      them, so it was rendering a second 640x480 depth pass for nobody. The depth
+      cube_detector actually reads,
+      /camera/camera/aligned_depth_to_color/image_raw, comes from the
+      rgbd_camera above, which produces colour and depth from one sensor.
+
+      Deleted rather than commented because the block contained its own XML
+      comment explaining visibility_mask, and nested comments are not legal XML -
+      commenting it out silently broke the whole xacro parse. Recover it from git
+      history if you want the unaligned depth stream the real D455 driver also
+      publishes; note it is aligned to camera_depth_frame rather than to colour,
+      which is why cube_detector wants the aligned one.
+    -->
 
     <!-- Left IR Camera -->
     <gazebo reference="${name}_infra1_frame">
