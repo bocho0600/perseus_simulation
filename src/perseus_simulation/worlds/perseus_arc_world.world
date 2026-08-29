@@ -104,6 +104,12 @@
       <uri>model://Moon_DEM</uri>
     </include>
 
+    <!-- Team-supplied ArUco markers on the 80/20 fiducial rail (sections 4.6.7, 5.7).
+         Sensor-visible on purpose: the camera has to detect these. -->
+    <include>
+      <uri>model://lunabotics_fiducials</uri>
+    </include>
+
     <!-- 30-40 cm boulder obstacles, section 3.1 -->
     <include>
       <uri>model://lunabotics_boulders</uri>

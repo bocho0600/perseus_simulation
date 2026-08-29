@@ -1,0 +1,146 @@
+<?xml version='1.0'?>
+<!--
+  Team-supplied ArUco fiducials on the arena's 80/20 fiducial rail.
+
+  The arena provides only the bare rail; the markers and their mounts are the
+  team's own kit, attached during setup and removed afterwards (guidebook
+  section 4.6.7). These are modelled where the guidebook puts the rail:
+
+    rail        X -2.00 .. -0.50 m, on the inside face of the front wall
+    height      Z = 0.40 m, "approximately 40 cm (+/- 2.5 cm) above the
+                regolith surface" (section 5.7)
+    near end    0.50 m west of the Origin Point, which is the centre of the
+                front wall and the origin of the arena frame used throughout
+                this world
+
+  Marker centres in ARENA coordinates - this is the table a registration node
+  needs, since a detection only helps if you know where the marker is:
+
+    marker    ArUco id    X          Y       Z
+    aruco01   0           -1.7125    0.028   0.40
+    aruco02   1           -1.2500    0.028   0.40
+    aruco03   2           -0.7875    0.028   0.40
+
+  Dictionary is DICT_4X4_50. The marker SQUARE is 0.238 m on a 0.35 m plate -
+  the rest is the white quiet zone the detector needs to find the contour.
+  Pass 0.238 to estimatePoseSingleMarkers, not 0.35; using the plate size
+  scales every translation you recover by 1.47.
+
+  Three 0.35 m plates is what fits: 3 x 0.35 = 1.05 m on a 1.50 m rail leaves
+  four 0.1125 m gaps. A fourth plate at this size would leave 2 cm gaps. Drop
+  to ~0.25 m if you want more markers for better acquisition coverage.
+
+  All three sit inside the starting zone (X -2.25 .. 0), which section 4.6.7
+  requires - fiducials must be completely contained within it.
+
+  Deliberately NO visibility_flags here, unlike lunabotics_zones. These are
+  real hardware the camera has to see; the zone outlines are annotations that
+  must stay out of perception.
+
+  The textures are generated, not the old ARC ones. Those were recovered from
+  git first and turned out to be undecodable: correct binary patterns, but the
+  black border ran to the texture edge with no white quiet zone, so no detector
+  would ever find them. These are regenerated with a 16% white margin and were
+  round-tripped through cv2.aruco.ArucoDetector, which returns ids 0, 1 and 2.
+
+  Regenerate them if your detector uses a different dictionary - scripts to do
+  so are three lines of cv2.aruco.generateImageMarker - but keep the quiet zone
+  and update the id column above if you change the ids.
+-->
+<sdf version='1.8'>
+  <model name='lunabotics_fiducials'>
+    <pose>0 0 0 0 0 0</pose>
+    <static>true</static>
+
+    <link name='marker_01'>
+      <!-- pitch then yaw turns the plate's face to +Y, i.e. north into the arena -->
+      <pose>-1.7125 0.028 0.4 0 1.5708 1.5708</pose>
+      <collision name='marker_01_collision'>
+        <geometry>
+          <box>
+            <size>0.35 0.35 0.005</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='marker_01_visual'>
+        <geometry>
+          <box>
+            <size>0.35 0.35 0.005</size>
+          </box>
+        </geometry>
+        <material>
+          <pbr>
+            <metal>
+              <albedo_map>textures/aruco01.png</albedo_map>
+            </metal>
+          </pbr>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+
+    <link name='marker_02'>
+      <!-- pitch then yaw turns the plate's face to +Y, i.e. north into the arena -->
+      <pose>-1.25 0.028 0.4 0 1.5708 1.5708</pose>
+      <collision name='marker_02_collision'>
+        <geometry>
+          <box>
+            <size>0.35 0.35 0.005</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='marker_02_visual'>
+        <geometry>
+          <box>
+            <size>0.35 0.35 0.005</size>
+          </box>
+        </geometry>
+        <material>
+          <pbr>
+            <metal>
+              <albedo_map>textures/aruco02.png</albedo_map>
+            </metal>
+          </pbr>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+
+    <link name='marker_03'>
+      <!-- pitch then yaw turns the plate's face to +Y, i.e. north into the arena -->
+      <pose>-0.7875 0.028 0.4 0 1.5708 1.5708</pose>
+      <collision name='marker_03_collision'>
+        <geometry>
+          <box>
+            <size>0.35 0.35 0.005</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='marker_03_visual'>
+        <geometry>
+          <box>
+            <size>0.35 0.35 0.005</size>
+          </box>
+        </geometry>
+        <material>
+          <pbr>
+            <metal>
+              <albedo_map>textures/aruco03.png</albedo_map>
+            </metal>
+          </pbr>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+
+  </model>
+</sdf>
