@@ -1,49 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   CycloneDDS tuning for the simulation. Matches perseus-v3's middleware so sim
-  and robot run the same RMW, but this is a different job from
-  perseus-v3/config/cyclonedds_autonomy.xml: that one binds an interface and
-  lists unicast peers for the multi-machine rover LAN, whereas everything here
-  is one host talking to itself.
+  and robot run the same RMW, and so the perseus-v3 autonomy stack
+  (autonomy_bringup localisation.launch.py sim:=true) can subscribe to the
+  sim's topics.
 
-  Two separate concerns:
+  DISCOVERY IS DELIBERATELY LEFT ALONE. This file tunes transport sizing only.
+  An earlier version bound <Interfaces> to "lo" on the reasoning that the sim is
+  one host talking to itself. That broke everything: loopback carries no
+  MULTICAST flag (ip link shows <LOOPBACK,UP,LOWER_UP>), so Cyclone had no
+  multicast-capable interface and discovery failed outright - `ros2 topic list`
+  returned only /parameter_events and /rosout, even between two processes on
+  this machine, and the localisation stack saw no sim topics at all.
 
-  1. Large messages. /livox/lidar is 720 x 32 points at 32 bytes = 737 KB per
-     message at 10 Hz. Cyclone's defaults are sized for small samples, so a
-     cloud that big is split into hundreds of fragments and throttled by the
-     writer cache; losing any one fragment discards the whole cloud. Measured
-     on Fast DDS defaults, the same message size gave 5.5 Hz on a 10 Hz topic.
-     MaxMessageSize / FragmentSize are raised to loopback MTU so a cloud is a
-     dozen fragments rather than hundreds, the socket receive buffer is raised
-     above one message, and WhcHigh is raised so the writer does not stall.
+  The perseus-v3 dev shell sets no CYCLONEDDS_URI, so it runs Cyclone's default
+  interface autodetection. This side must do the same or the two never meet.
+  Note this is a different job from perseus-v3/config/cyclonedds_autonomy.xml,
+  which binds ROAR_DDS_IFACE and lists unicast peers for the multi-machine rover
+  LAN; that config is for the robot network, not for talking to the sim.
 
-     The socket receive buffer cannot exceed net.core.rmem_max, which is
-     4 MB on this machine. Cyclone warns and continues if the kernel gives it
-     less, so this is safe to carry to a machine with a smaller limit.
+  What is left is purely about message size. /livox/lidar is 720 x 32 points at
+  32 bytes = 737 KB per message at 10 Hz. On stock settings a cloud that big is
+  fragmented and roughly half of them are lost: Gazebo published a steady 9.8 Hz
+  while ROS subscribers saw ~5.5 Hz with gaps over a second. The IMU, at a few
+  hundred bytes, was unaffected at 200 Hz - which is what pointed at size rather
+  than load. It matters more here than it looks, because BIEVR-LIO subscribes
+  best-effort (qos_reliable: false), so a lost fragment is not retransmitted.
 
-  2. Staying local. The sim has no reason to touch the LAN, so it runs on
-     loopback only. Point CYCLONEDDS_URI somewhere else to talk to another
-     machine - scripts/pixi-run.sh only sets it when it is unset.
+  Both settings are capped by the kernel: SocketReceiveBufferSize cannot exceed
+  net.core.rmem_max, 4 MB on this machine. Cyclone warns and continues if it is
+  given less, so this is safe to carry to a machine with a smaller limit.
 -->
 <CycloneDDS xmlns="https://cdds.io/config">
   <Domain id="any">
-    <General>
-      <Interfaces>
-        <NetworkInterface name="lo" multicast="true"/>
-      </Interfaces>
-      <AllowMulticast>true</AllowMulticast>
-      <!-- Loopback MTU is 64 kB, so send big datagrams instead of many small ones. -->
-      <MaxMessageSize>65500B</MaxMessageSize>
-      <FragmentSize>65000B</FragmentSize>
-    </General>
-
     <Internal>
-      <!-- Must exceed one 737 KB point cloud; capped by net.core.rmem_max.
-           Spelled MinimumSocketReceiveBufferSize before Cyclone 0.10, which
-           still parses it but warns and rewrites it to this form. -->
+      <!-- Must exceed one 737 KB point cloud; default is far below it. -->
       <SocketReceiveBufferSize min="4MB"/>
       <Watermarks>
-        <!-- Default is 500 kB, i.e. smaller than a single cloud. -->
+        <!-- Default is 500 kB, i.e. smaller than a single cloud, so the
+             writer stalls partway through every message. -->
         <WhcHigh>8MB</WhcHigh>
       </Watermarks>
     </Internal>
