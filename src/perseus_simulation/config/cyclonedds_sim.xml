@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  CycloneDDS tuning for the simulation. Matches perseus-v3's middleware so sim
+  and robot run the same RMW, but this is a different job from
+  perseus-v3/config/cyclonedds_autonomy.xml: that one binds an interface and
+  lists unicast peers for the multi-machine rover LAN, whereas everything here
+  is one host talking to itself.
+
+  Two separate concerns:
+
+  1. Large messages. /livox/lidar is 720 x 32 points at 32 bytes = 737 KB per
+     message at 10 Hz. Cyclone's defaults are sized for small samples, so a
+     cloud that big is split into hundreds of fragments and throttled by the
+     writer cache; losing any one fragment discards the whole cloud. Measured
+     on Fast DDS defaults, the same message size gave 5.5 Hz on a 10 Hz topic.
+     MaxMessageSize / FragmentSize are raised to loopback MTU so a cloud is a
+     dozen fragments rather than hundreds, the socket receive buffer is raised
+     above one message, and WhcHigh is raised so the writer does not stall.
+
+     The socket receive buffer cannot exceed net.core.rmem_max, which is
+     4 MB on this machine. Cyclone warns and continues if the kernel gives it
+     less, so this is safe to carry to a machine with a smaller limit.
+
+  2. Staying local. The sim has no reason to touch the LAN, so it runs on
+     loopback only. Point CYCLONEDDS_URI somewhere else to talk to another
+     machine - scripts/pixi-run.sh only sets it when it is unset.
+-->
+<CycloneDDS xmlns="https://cdds.io/config">
+  <Domain id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="lo" multicast="true"/>
+      </Interfaces>
+      <AllowMulticast>true</AllowMulticast>
+      <!-- Loopback MTU is 64 kB, so send big datagrams instead of many small ones. -->
+      <MaxMessageSize>65500B</MaxMessageSize>
+      <FragmentSize>65000B</FragmentSize>
+    </General>
+
+    <Internal>
+      <!-- Must exceed one 737 KB point cloud; capped by net.core.rmem_max.
+           Spelled MinimumSocketReceiveBufferSize before Cyclone 0.10, which
+           still parses it but warns and rewrites it to this form. -->
+      <SocketReceiveBufferSize min="4MB"/>
+      <Watermarks>
+        <!-- Default is 500 kB, i.e. smaller than a single cloud. -->
+        <WhcHigh>8MB</WhcHigh>
+      </Watermarks>
+    </Internal>
+  </Domain>
+</CycloneDDS>
