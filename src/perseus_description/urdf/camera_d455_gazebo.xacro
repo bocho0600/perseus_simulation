@@ -17,8 +17,30 @@
 
   <xacro:macro name="camera_d455_gazebo" params="name:=camera">
 
+    <!--
+      Plain colour camera, not an rgbd_camera. It was rgbd, which renders a
+      depth pass and a point cloud alongside the image; nothing in the
+      Lunabotics stack wants either. vision/aruco_detector reads only the colour
+      image and its camera_info.
+
+      Consequence worth knowing: this removes
+      /camera/camera/aligned_depth_to_color/image_raw, which was the rgbd
+      sensor's depth output and is what cube_detector uses in its
+      depth_estimation_mode "depth_image". cube_detector is not launched by
+      localisation or navigation and there are no cubes in Lunabotics, but if
+      you do run vision.launch.py against this sim, set depth_estimation_mode
+      to "none" or switch this sensor back to rgbd_camera.
+
+      Topic naming, confirmed against a running sim rather than assumed. A
+      camera sensor publishes the image at <topic> and its info at the SIBLING
+      path - the last element replaced by camera_info - which is the same shape
+      the infra1/infra2 cameras already use. So <topic> is
+      /camera/camera/color/image and the info lands on
+      /camera/camera/color/camera_info, both unchanged from what rgbd produced.
+      The bridge entries did not need to move.
+    -->
     <gazebo reference="${name}_color_frame">
-      <sensor name="rgbd_camera" type="rgbd_camera">
+      <sensor name="color_camera" type="camera">
         <pose>0 0 0 0 0 0</pose>
         <visualize>true</visualize>
         <update_rate>15</update_rate>
@@ -41,7 +63,7 @@
           -->
           <visibility_mask>268435454</visibility_mask>
         </camera>
-        <topic>/${name}/${name}/color</topic>
+        <topic>/${name}/${name}/color/image</topic>
         <gz_frame_id>${name}_color_optical_frame</gz_frame_id>
       </sensor>
     </gazebo>

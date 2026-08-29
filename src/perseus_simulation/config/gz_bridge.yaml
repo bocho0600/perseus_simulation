@@ -56,12 +56,6 @@
   gz_type_name: "gz.msgs.Image"
   direction: GZ_TO_ROS
   lazy: true
-- ros_topic_name: "/camera/camera/aligned_depth_to_color/image_raw"
-  gz_topic_name: "/camera/camera/color/depth_image"
-  ros_type_name: "sensor_msgs/msg/Image"
-  gz_type_name: "gz.msgs.Image"
-  direction: GZ_TO_ROS
-  lazy: true
 - ros_topic_name: "/camera/camera/color/camera_info"
   gz_topic_name: "/camera/camera/color/camera_info"
   ros_type_name: "sensor_msgs/msg/CameraInfo"
@@ -69,9 +63,9 @@
   direction: GZ_TO_ROS
   lazy: true
 # ─── Depth Camera ────────────────────────────────────────────────────────────
-# The standalone depth_camera sensor is disabled in camera_d455_gazebo.xacro and
-# its three topics are not bridged. The depth cube_detector actually reads is
-# aligned_depth_to_color above, which the rgbd_camera produces.
+# No depth at all any more. The standalone depth_camera sensor is gone, and the
+# colour sensor is a plain camera rather than an rgbd_camera, so there is no
+# aligned_depth_to_color either. See camera_d455_gazebo.xacro.
 # ─── Infra1 (Left IR) ────────────────────────────────────────────────────────
 - ros_topic_name: "/camera/camera/infra1/image_raw"
   gz_topic_name: "/camera/camera/infra1/image_raw"
