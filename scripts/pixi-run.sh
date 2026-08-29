@@ -39,6 +39,48 @@ for v in AMENT_PREFIX_PATH AMENT_CURRENT_PREFIX CMAKE_PREFIX_PATH \
   strip_ros "$v"
 done
 
+# Keep Ruby pointed at this environment's own gems. The `gz` CLI is a Ruby
+# script that does `require "fiddle"`, and fiddle ships here as a regular gem
+# rather than a default gem (Ruby 4.0 dropped it from the default set). A
+# GEM_PATH inherited from the outer shell makes RubyGems look elsewhere, the
+# require fails, and Gazebo dies immediately at startup:
+#
+#   cannot load such file -- fiddle (LoadError)
+#   [ERROR] [gazebo-1]: process has died ... exit code 1
+#
+# The rest of the launch carries on without a server, so what you actually see
+# is ros_gz_sim repeating "Requesting list of world names." forever and the
+# controller spawners never finding /controller_manager. The giveaway earlier
+# in the log is a run of "Ignoring <gem> because its extensions are not built"
+# lines - those are gems from the foreign path, built for a different Ruby ABI.
+#
+# pixi legitimately sets GEM_HOME inside the environment, so entries under
+# CONDA_PREFIX are kept and only foreign ones are dropped.
+keep_env_gems() {
+  local var="$1"
+  local val="${!var:-}"
+  [ -n "$val" ] || return 0
+  [ -n "${CONDA_PREFIX:-}" ] || return 0
+  local out="" entry
+  local IFS=':'
+  for entry in $val; do
+    case "$entry" in
+      "$CONDA_PREFIX"/*) out="${out:+$out:}$entry" ;;
+      "") ;;
+      *) echo "pixi-run: dropping foreign $var entry [$entry] so Ruby finds the bundled gems" >&2 ;;
+    esac
+  done
+  if [ -n "$out" ]; then
+    export "$var=$out"
+  else
+    unset "$var"
+  fi
+}
+
+for v in GEM_HOME GEM_PATH RUBYLIB; do
+  keep_env_gems "$v"
+done
+
 # Use CycloneDDS, the middleware perseus-v3 runs. This is about the point cloud,
 # not just parity. /livox/lidar is 737 KB per message (720 x 32 points x 32
 # bytes) at 10 Hz, and measured on this world with the rover spawned:
