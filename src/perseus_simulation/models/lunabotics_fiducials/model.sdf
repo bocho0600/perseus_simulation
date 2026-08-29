@@ -21,7 +21,12 @@
     aruco02   1           -1.2500    0.028   0.40
     aruco03   2           -0.7875    0.028   0.40
 
-  Dictionary is DICT_4X4_50. The marker SQUARE is 0.238 m on a 0.35 m plate -
+  Generated from DICT_4X4_50, but they decode under DICT_4X4_100 too - OpenCV's
+  4X4 dictionaries are nested, so ids 0-2 are byte-identical between them. That
+  matters because vision/aruco_detector defaults to DICT_4X4_100
+  (DEFAULT_DICTIONARY_ID = 1), so these work with that detector unchanged.
+
+  The marker SQUARE is 0.238 m on a 0.35 m plate -
   the rest is the white quiet zone the detector needs to find the contour.
   Pass 0.238 to estimatePoseSingleMarkers, not 0.35; using the plate size
   scales every translation you recover by 1.47.
