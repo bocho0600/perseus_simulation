@@ -34,10 +34,86 @@
   gz_type_name: "gz.msgs.IMU"
   direction: GZ_TO_ROS
 # ─── RealSense D455 ──────────────────────────────────────────────────────────
-# The D455 Gazebo sensors are not instantiated (see sensor_mount.urdf.xacro), so
-# there is nothing to bridge for color / depth / infra1 / infra2. The camera links
-# still exist in the URDF, so TF is unaffected. If the cameras are re-enabled,
-# restore these entries from git history.
+# Every camera entry is lazy: the bridge only subscribes to the gz topic once a
+# ROS subscriber appears. That is what makes always_on false in
+# camera_d455_gazebo.xacro actually pay off - a non-lazy bridge is itself a
+# subscriber, so gz renders all four sensors forever whether or not anything
+# consumes them. Measured on this world with the rover spawned:
+#
+#     no cameras at all                        RTF 0.98   Livox 9.8 Hz
+#     4 cameras, always_on true                RTF 0.395  Livox 3.87 Hz
+#     always_on false, bridge NOT lazy         RTF 0.657  Livox 7.07 Hz
+#
+# Re-enabled alongside xacro:camera_d455_gazebo. vision/aruco_detector reads
+# /camera/camera/color/image_raw and, with use_camera_info true, the matching
+# camera_info; cube_detector reads aligned_depth_to_color. The infra1/infra2
+# pairs are bridged for parity with the real driver's topic set, but nothing
+# currently subscribes to them.
+# ─── RGB Color Camera ───────────────────────────────────────────────────────
+- ros_topic_name: "/camera/camera/color/image_raw"
+  gz_topic_name: "/camera/camera/color/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+  lazy: true
+- ros_topic_name: "/camera/camera/aligned_depth_to_color/image_raw"
+  gz_topic_name: "/camera/camera/color/depth_image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+  lazy: true
+- ros_topic_name: "/camera/camera/color/camera_info"
+  gz_topic_name: "/camera/camera/color/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+  lazy: true
+# ─── Depth Camera ────────────────────────────────────────────────────────────
+- ros_topic_name: "/camera/camera/depth/image_rect_raw"
+  gz_topic_name: "/camera/camera/depth"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+  lazy: true
+- ros_topic_name: "/camera/camera/depth/camera_info"
+  gz_topic_name: "/camera/camera/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+  lazy: true
+# ─── PointCloud ──────────────────────────────────────────────────────────────
+- ros_topic_name: "/camera/camera/depth/color/points"
+  gz_topic_name: "/camera/camera/depth/points"
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "gz.msgs.PointCloudPacked"
+  direction: GZ_TO_ROS
+  lazy: true
+# ─── Infra1 (Left IR) ────────────────────────────────────────────────────────
+- ros_topic_name: "/camera/camera/infra1/image_raw"
+  gz_topic_name: "/camera/camera/infra1/image_raw"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+  lazy: true
+- ros_topic_name: "/camera/camera/infra1/camera_info"
+  gz_topic_name: "/camera/camera/infra1/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+  lazy: true
+# ─── Infra2 (Right IR) ───────────────────────────────────────────────────────
+- ros_topic_name: "/camera/camera/infra2/image_raw"
+  gz_topic_name: "/camera/camera/infra2/image_raw"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+  lazy: true
+- ros_topic_name: "/camera/camera/infra2/camera_info"
+  gz_topic_name: "/camera/camera/infra2/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+  lazy: true
 # ─── Livox MID-360 ───────────────────────────────────────────────────────────
 - ros_topic_name: "/livox/lidar"
   gz_topic_name: "/scan_3d/points"

@@ -1,4 +1,18 @@
 <?xml version="1.0"?>
+<!--
+  Gazebo sensors for the RealSense D455.
+
+  All four are always_on false, so gz renders them only while something is
+  subscribed - the same pattern the Livox uses in sensors.urdf.xacro. That
+  matters a lot here: with the four sensors rendering unconditionally at 30 Hz,
+  the whole simulation dropped to RTF 0.395 and the Livox fell from 9.8 Hz to
+  3.87 Hz. Rendering is the dominant cost in this world, and only the colour
+  stream has a consumer (vision/aruco_detector, and cube_detector for aligned
+  depth), so paying for infra1/infra2 continuously is pure waste.
+
+  update_rate is 15 rather than 30 for the same reason. Fiducial acquisition
+  happens while the robot is stationary or turning slowly, so 15 Hz is ample.
+-->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:macro name="camera_d455_gazebo" params="name:=camera">
@@ -7,8 +21,8 @@
       <sensor name="rgbd_camera" type="rgbd_camera">
         <pose>0 0 0 0 0 0</pose>
         <visualize>true</visualize>
-        <update_rate>30</update_rate>
-        <always_on>true</always_on>
+        <update_rate>15</update_rate>
+        <always_on>false</always_on>
         <camera>
           <horizontal_fov>1.089</horizontal_fov>
           <image>
@@ -37,8 +51,8 @@
       <sensor name="depth_camera" type="depth_camera">
         <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
-        <update_rate>30</update_rate>
-        <always_on>true</always_on>
+        <update_rate>15</update_rate>
+        <always_on>false</always_on>
         <camera>
           <horizontal_fov>1.089</horizontal_fov>
           <image>
@@ -68,8 +82,8 @@
       <sensor name="ir_left_camera" type="camera">
         <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
-        <update_rate>30</update_rate>
-        <always_on>true</always_on>
+        <update_rate>15</update_rate>
+        <always_on>false</always_on>
         <camera>
           <horizontal_fov>1.089</horizontal_fov>
           <image>
@@ -99,8 +113,8 @@
       <sensor name="ir_right_camera" type="camera">
         <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
-        <update_rate>30</update_rate>
-        <always_on>true</always_on>
+        <update_rate>15</update_rate>
+        <always_on>false</always_on>
         <camera>
           <horizontal_fov>1.089</horizontal_fov>
           <image>

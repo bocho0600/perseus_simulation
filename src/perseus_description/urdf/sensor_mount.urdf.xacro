@@ -134,12 +134,12 @@
       <origin xyz="0.035 0.0 0.006" rpy="0.0 0.0 0.0"/>
     </xacro:sensor_d455>
     <!--
-      The D455 links above are kept so the TF tree matches the real robot, but the
-      Gazebo camera sensors are deliberately not instantiated: they cost rendering
-      time and nothing in the SLAM pipeline consumes them. Re-enable by restoring
-      the line below.
+      Gazebo camera sensors for the D455. Previously left out because nothing in
+      the SLAM pipeline consumed them and they cost rendering time; re-enabled
+      because vision/aruco_detector now needs the colour stream to find the
+      fiducials on the arena's 80/20 rail (lunabotics_fiducials).
     -->
-    <!-- <xacro:camera_d455_gazebo name="camera"/> -->
+    <xacro:camera_d455_gazebo name="camera"/>
   </xacro:macro>
 
 </robot>
