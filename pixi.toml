@@ -43,7 +43,12 @@ cmd = "bash scripts/pixi-run.sh colcon build --symlink-install --event-handlers 
 [tasks.sim]
 description = "Build and launch the Perseus Gazebo simulation"
 depends-on = ["build"]
-cmd = "bash scripts/pixi-run.sh bash -c 'source install/setup.bash && ros2 launch perseus_simulation perseus_sim.launch.py'"
+# Anything after the task name is forwarded straight to ros2 launch, so the
+# launch arguments work as usual:
+#   pixi run sim headless:=true rviz:=true   # no Gazebo window, watch it in RViz
+#   pixi run sim use_wheel_pid:=true         # chain the per-wheel velocity PID
+# The trailing `sim` is $0 for `bash -c`; the forwarded arguments land in "$@".
+cmd = '''bash scripts/pixi-run.sh bash -c 'source install/setup.bash && ros2 launch perseus_simulation perseus_sim.launch.py "$@"' sim'''
 
 [tasks.teleop]
 description = "Drive the rover with the keyboard (run in a second terminal)"
@@ -81,8 +86,15 @@ ros-jazzy-controller-manager = "*"
 ros-jazzy-diff-drive-controller = "*"
 ros-jazzy-mecanum-drive-controller = "*"
 ros-jazzy-joint-state-broadcaster = "*"
+# optional wheel velocity PID chained under the diff drive controller,
+# enabled with use_wheel_pid:=true
+ros-jazzy-pid-controller = "*"
 ros-jazzy-robot-state-publisher = "*"
 ros-jazzy-xacro = "*"
+# `ros2 control ...` (list_controllers, list_hardware_interfaces). Already an
+# exec_depend of src/perseus/package.xml but was never installed here, so the
+# verb did not exist in the environment.
+ros-jazzy-ros2controlcli = "*"
 
 # Nodes used by the simulation launch files
 ros-jazzy-robot-localization = "*"
@@ -91,3 +103,4 @@ ros-jazzy-twist-mux = "*"
 ros-jazzy-teleop-twist-keyboard = "*"
 ros-jazzy-realsense2-description = "*"
 ros-jazzy-joint-state-publisher-gui = "*"
+

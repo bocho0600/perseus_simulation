@@ -5,6 +5,7 @@ from launch.actions import (
     OpaqueFunction,
     SetEnvironmentVariable,
 )
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     PathJoinSubstitution,
@@ -20,6 +21,7 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     # ARGUMENTS
     gz_world = LaunchConfiguration("gz_world", default="perseus_arc_world.world")
+    headless = LaunchConfiguration("headless")
 
     # CONFIG + DATA FILES
     gz_bridge_params = PathJoinSubstitution(
@@ -44,6 +46,17 @@ def generate_launch_description():
         # The guidebook has the robot placed in a randomly selected starting
         # position and direction within that zone, so override these to
         # rehearse other draws.
+        DeclareLaunchArgument(
+            "headless",
+            default_value="false",
+            description=(
+                "Run Gazebo server-only, with no GUI. The render window is the "
+                "expensive part of a local sim, so this is the cheap way to get "
+                "real-time factor back; watch the robot in RViz instead (rviz:=true "
+                "on perseus_sim.launch.py). Sensors still run -- gz_ros2_control, "
+                "the LiDAR and the cameras are server side and keep publishing"
+            ),
+        ),
         DeclareLaunchArgument(
             "initial_pose_x",
             default_value="-1.125",
@@ -87,6 +100,10 @@ def generate_launch_description():
     def gz_launch(context):
         # Perform the world path substitution
         performed_gz_world_path = gz_world_path.perform(context)
+        # -s is server-only. It has to be baked into gz_args here rather than
+        # passed as its own launch argument, because ros_gz_sim's gz_sim.launch.py
+        # forwards gz_args verbatim to the `gz sim` command line.
+        server_only = "-s " if IfCondition(headless).evaluate(context) else ""
 
         gz_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
@@ -101,7 +118,7 @@ def generate_launch_description():
                 ]
             ),
             launch_arguments={
-                "gz_args": f"-r -v 4 {performed_gz_world_path}",
+                "gz_args": f"{server_only}-r -v 4 {performed_gz_world_path}",
             }.items(),
         )
 

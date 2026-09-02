@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="perseus_ros2_control" params="namespace:='' name prefix can_bus:='can0' hardware_plugin">
+  <xacro:macro name="perseus_ros2_control" params="namespace:='' name prefix can_bus:='can0' hardware_plugin use_wheel_pid:='false'">
     <ros2_control name="${name}" type="system">
       <hardware>
         <plugin>${hardware_plugin}</plugin>
@@ -35,6 +35,16 @@
             <!-- <remapping>/diff_drive_base_controller/cmd_vel:=/cmd_vel</remapping> -->
           </ros>
           <parameters>$(find perseus)/config/perseus_controllers.yaml</parameters>
+          <!-- Overlay, so it MUST come after the base file for its overrides to
+               win. This is the sim equivalent of the second parameter file
+               controllers.launch.py passes on the rover. -->
+          <!-- Used bare, not compared against a string: xacro has already
+               coerced "true" into a Python bool by this point, so
+               ${use_wheel_pid == 'true'} silently evaluates False (it compares a
+               bool to a string). Bare, it handles true/false/True/1/0 alike. -->
+          <xacro:if value="${use_wheel_pid}">
+            <parameters>$(find perseus)/config/wheel_pid_chaining.yaml</parameters>
+          </xacro:if>
           <parameters>$(find perseus_simulation)/config/ros2_control_sim.yaml</parameters>
         </plugin>
       </gazebo>

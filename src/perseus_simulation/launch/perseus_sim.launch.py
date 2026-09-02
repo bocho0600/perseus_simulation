@@ -21,6 +21,9 @@ def generate_launch_description():
     # ARGUMENTS
     use_sim_time = LaunchConfiguration("use_sim_time")
     launch_ekf = LaunchConfiguration("launch_ekf")
+    use_wheel_pid = LaunchConfiguration("use_wheel_pid")
+    headless = LaunchConfiguration("headless")
+    rviz = LaunchConfiguration("rviz")
 
     arguments = [
         DeclareLaunchArgument(
@@ -32,6 +35,31 @@ def generate_launch_description():
             "launch_ekf",
             default_value="false",
             description="If true, launch the EKF filter node",
+        ),
+        DeclareLaunchArgument(
+            "headless",
+            default_value="false",
+            description=(
+                "Run Gazebo with no GUI. Pairs with rviz:=true -- drop the render "
+                "window, keep a view of what the robot is doing"
+            ),
+        ),
+        DeclareLaunchArgument(
+            "rviz",
+            default_value="false",
+            description="Launch RViz with perseus_simulation/rviz/view.rviz",
+        ),
+        DeclareLaunchArgument(
+            "use_wheel_pid",
+            default_value="false",
+            description=(
+                "Chain a per-wheel velocity PID between the diff drive controller "
+                "and the hardware. Needs to reach two places: the description (so "
+                "gz_ros2_control loads the overlay config) and controllers.launch.py "
+                "(so the extra controller is spawned in the right order). See "
+                "perseus/config/wheel_pid_chaining.yaml -- and note Gazebo cannot "
+                "reproduce the stall this mitigates"
+            ),
         ),
     ]
     # IMPORTED LAUNCH FILES
@@ -49,6 +77,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
+            "headless": headless,
         }.items(),
     )
     rsp_launch = IncludeLaunchDescription(
@@ -66,6 +95,7 @@ def generate_launch_description():
         launch_arguments={
             "use_sim_time": use_sim_time,
             "hardware_plugin": "gz_ros2_control/GazeboSimSystem",
+            "use_wheel_pid": use_wheel_pid,
         }.items(),
     )
     controllers_launch = IncludeLaunchDescription(
@@ -83,6 +113,7 @@ def generate_launch_description():
         launch_arguments={
             "use_sim_time": use_sim_time,
             "launch_controller_manager": "false",
+            "use_wheel_pid": use_wheel_pid,
         }.items(),
     )
     # Delay controller startup until Gazebo and ros2_control have had time to
@@ -100,13 +131,14 @@ def generate_launch_description():
     ekf_config_file = PathJoinSubstitution(
         [FindPackageShare("perseus_simulation"), "config", "ekf_sim_config.yaml"]
     )
-    rviz = Node(
+    rviz_node = Node(
         package="rviz2",
         executable="rviz2",
         name="rviz2",
         arguments=["-d", rviz_config],
         parameters=[{"use_sim_time": use_sim_time}],
         output="screen",
+        condition=IfCondition(rviz),
     )
 
     # EKF node - only run if launch_ekf parameter is true
@@ -166,7 +198,7 @@ def generate_launch_description():
         ekf_delayed,
         rosbridge_launch,
         twist_mux_launch,
-        # rviz,
+        rviz_node,
     ]
 
     return LaunchDescription(arguments + launch_files)
