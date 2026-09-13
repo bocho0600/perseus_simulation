@@ -8,3 +8,4 @@ log/
 
 # third-party packages fetched by `pixi run fetch-deps`
 src/twist_stamper/
+__pycache__/

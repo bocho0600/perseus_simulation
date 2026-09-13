@@ -1,0 +1,694 @@
+<?xml version="1.0"?>
+<robot name="bucket" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!--
+    Excavation bucket - a front-loader attachment that bolts to the front of
+    the chassis.
+
+    Source of truth: the Onshape export produced by
+    ~/Documents/projects/onshape-urdf/to_urdf_test.py, kept for reference under
+    perseus_description/cad/bucket/. Every number below is either measured off
+    that export's meshes and mate transforms, or derived from them. The two
+    exceptions are called out explicitly: material density and the mount pose.
+
+    ── The mechanism ─────────────────────────────────────────────────────────
+    A symmetric double four-bar. Two 40x20 arms pivot on the upper pair of
+    bearing blocks; two 250 mm actuators pivot on the lower pair 240 mm below
+    and push brackets 597 mm out along the arms. A third 250 mm actuator runs
+    from a plate on the arms to the bucket and tilts it.
+
+    ── What is modelled, and why it differs ──────────────────────────────────
+    URDF is a tree and cannot express the two closed loops. Re-closing them
+    with raw SDF <joint> blocks (as cad/bucket/bucket_loops.urdf.xacro tries
+    to) does not survive URDF->SDF conversion, because the links those joints
+    reference hang off *fixed* joints and get welded into their parents first.
+
+    So the linkage is reduced to the two independent degrees of freedom the
+    loops leave behind:
+
+        bucket_lift_joint  - arms pitch about the upper frame pivots
+        bucket_tilt_joint  - bucket pitches about the arm tips
+
+    Those names match the actuator groups the real robot drives over CAN -
+    bucket_driver in the `payloads` package writes LIFT_BOTH and TILT_BOTH.
+
+    The three rams ARE drawn, as barrel + sliding shaft, and they track the
+    linkage exactly - see "Rams" below. They are cosmetic only: their mass
+    stays lumped at their pin locations on the three load-bearing bodies, and
+    they carry no collision geometry.
+
+    ── The bucket is a clamshell ─────────────────────────────────────────────
+    Bucket_1 is a subassembly: "Bucket FRONT Frame", "Bucket REAR Frame", a
+    BucketClipVslotMount and two 50 mm actuators. Those actuators are the
+    JAWS_BOTH group in bucket_driver. The export flattens all of it into one
+    rigid body (cad.max_depth: 0) and so does this file - the jaws are a third
+    DOF that is not modelled. The floor collision below spans the gap between
+    the two halves, i.e. the jaws are simulated permanently closed.
+
+    ── Rams ──────────────────────────────────────────────────────────────────
+    Each ram is a barrel pinned to its parent by a revolute joint, plus a shaft
+    on a prismatic joint. The two meshes come from splitting the CAD's fused
+    250mm_Actuator_N.stl at its two disconnected solids, so they are the real
+    parts, not stand-ins.
+
+    Nothing in Gazebo can make them follow the linkage on their own:
+      * a genuine closed loop is refused outright - gz-physics-dartsim answers
+        "the child link already has a parent joint";
+      * URDF <mimic> converts into SDF <mimic> cleanly, but dartsim in
+        Gazebo Harmonic does not enforce it - the joint just sits frozen at
+        zero (verified against a two-bar test model);
+      * and the affine relation <mimic> could express is wrong by up to 30 mm
+        at the rod end anyway, because beta(q) and s(q) are both nonlinear.
+
+    So the ram angles and extensions are computed in closed form by
+    perseus_simulation's bucket_ram_follower node and fed to the Gazebo
+    position controllers below. That is exact, not an approximation. If the
+    node is not running the rams simply hold their last pose - they have
+    gravity disabled and negligible mass, so they neither droop nor perturb
+    the linkage.
+  -->
+
+  <!-- ══ Density ═════════════════════════════════════════════════════════
+       The ONE genuine assumption in this file. Onshape reports
+       "hasMass": false, "massMissingCount": 53 for this assembly - not a
+       single part has a material assigned, which is why the export wrote
+       mass=0 or mass=1 everywhere. The *volumes* are exact though (Onshape
+       gives 4138.7 cm3 for the assembly; summing the meshes here gives
+       4118.4 cm3, a 0.5% tessellation difference), so mass is volume x this.
+
+       2700 kg/m3 is 6061 aluminium. The frame and rails measure 20x20 mm
+       V-slot extrusion at ~70% fill, and the parts list contains a
+       "BucketClipVslotMount", so extruded aluminium is the right call. For a
+       steel fabrication use 7850 and every mass and inertia below scales by
+       2.907 - they are all linear in density.
+
+       To fix this properly: assign materials to every part in Onshape and
+       re-export. Nothing else will. -->
+  <xacro:property name="bucket_density" value="2700.0"/>
+
+  <!-- ══ Where the attachment sits on the rover ═══════════════════════════
+       DERIVED, but check it against the real machine.
+
+       The frame's two rearward rails run 243 mm back from the gantry at
+       z = 0.018..0.038 in frame coordinates, 390 mm apart. The rover chassis
+       is 450 mm wide with its deck at chassis z = 0.2, so the rails land on
+       the deck just inside its edges - that is plainly how this bolts on, and
+       it fixes both x and z:
+
+         z: deck top 0.200 + (arm pivot 0.213 - rail underside 0.018) = 0.395
+         x: gantry front face 17 mm ahead of the chassis front face = 0.0591
+
+       Note this puts the gantry around the sensor mast - see the warning at
+       the bottom of this file. -->
+  <xacro:property name="bucket_mount_x" value="0.0591"/>
+  <xacro:property name="bucket_mount_y" value="0.0"/>
+  <xacro:property name="bucket_mount_z" value="0.395"/>
+
+  <!-- ══ Linkage geometry ════════════════════════════════════════════════
+       All MEASURED, by forward-kinematicking the export's mate transforms
+       into one frame. Mate transforms are rigid-body facts and are unaffected
+       by the export's broken mass properties. -->
+  <!-- arm pivot -> bucket pivot, along the arm -->
+  <xacro:property name="arm_length" value="0.70004"/>
+  <!-- lateral offset from the arm-pivot midpoint to the bucket pivot: the
+       bucket hangs off ONE arm (Revolute_2 on Square_Tube_2), not both -->
+  <xacro:property name="bucket_pivot_y" value="-0.10200"/>
+  <!-- arm pivot -> lift-actuator bracket, along the arm (Fastened_2) -->
+  <xacro:property name="lift_rod_offset" value="0.59712"/>
+  <!-- arm pivot above the lift-actuator pivot -->
+  <xacro:property name="lift_pivot_drop" value="0.24000"/>
+  <!-- the lift bracket sits this far below the pivot line, hence the phase -->
+  <xacro:property name="lift_phase" value="-0.016763"/>   <!-- -0.96 deg -->
+  <!-- pin-to-pin length of a "250mm Actuator" as drawn in CAD = retracted -->
+  <xacro:property name="actuator_retracted" value="0.36500"/>
+  <xacro:property name="actuator_stroke" value="0.25000"/>
+
+  <!-- ══ Lift travel ═════════════════════════════════════════════════════
+       DERIVED from the above. With r the bracket radius, d the pivot drop and
+       a the arm angle measured from the CAD pose,
+
+           L(a)^2 = r^2 + d^2 + 2*r*d*sin(a + lift_phase)
+
+       Retracted (L = 0.365) gives a = -77.61 deg; extended (L = 0.615) gives
+       a = -6.24 deg. So the arms swing 71.36 deg, and at full extension they
+       sit 6.24 deg below the frame's own x axis - they never quite reach
+       horizontal. Joint zero is placed at full extension (top of travel,
+       transport pose) by baking that 6.24 deg into the joint origin.
+
+       Worth knowing: the CAD's *exported* pose needs L = 0.640, which is 25 mm
+       beyond full extension. That is not an error in the CAD - the toolkit
+       places each link by its own mate transform and never solves the loop, so
+       the exported pose is the mate zero, not an assembly configuration. It is
+       also why the pose in cad/bucket/ has the actuators visibly detached from
+       their brackets. -->
+  <xacro:property name="lift_len_max"
+                  value="${sqrt(lift_rod_offset*lift_rod_offset + lift_pivot_drop*lift_pivot_drop)}"/>
+  <xacro:property name="lift_sin_ext"
+                  value="${((actuator_retracted + actuator_stroke)**2
+                            - lift_rod_offset*lift_rod_offset - lift_pivot_drop*lift_pivot_drop)
+                           / (2*lift_rod_offset*lift_pivot_drop)}"/>
+  <xacro:property name="lift_sin_ret"
+                  value="${(actuator_retracted**2
+                            - lift_rod_offset*lift_rod_offset - lift_pivot_drop*lift_pivot_drop)
+                           / (2*lift_rod_offset*lift_pivot_drop)}"/>
+  <!-- nose-down pitch of the arm at joint zero, relative to the frame -->
+  <xacro:property name="lift_zero_pitch" value="${-(asin(lift_sin_ext) - lift_phase)}"/>
+  <xacro:property name="lift_lower" value="${asin(lift_sin_ret) - asin(lift_sin_ext)}"/>
+  <xacro:property name="lift_upper" value="0.0"/>
+
+  <!-- ══ Tilt travel ═════════════════════════════════════════════════════
+       Same treatment. The tilt actuator works between a pin on the bucket
+       131.1 mm from the bucket pivot and a bracket on the arm 513.5 mm from
+       it. The included angle is 108.25 deg in the CAD pose. Extending to
+       0.615 m opens it to 136.34 deg (the bucket dumps); retracting closes it,
+       but the actuator's 0.365 m retracted length is unreachable - the two
+       pins go colinear at 0.382 m first, so the geometric stop is the fold at
+       0 deg, i.e. 1.889 rad of curl.
+
+       Curl is capped short of that fold: past about 1.6 rad the bucket is
+       folded back over the arms, which the real structure will not allow.
+       Dump is the true actuator limit. -->
+  <xacro:property name="tilt_lower" value="-0.490398"/>
+  <xacro:property name="tilt_upper" value="1.600000"/>
+  <xacro:property name="tilt_fold_limit" value="1.889229"/>  <!-- geometric, for reference -->
+
+  <!-- ══ Actuator force and speed ════════════════════════════════════════
+       0.1 m/s is ACTUATOR_MAX_SPEED from bucket_driver.cpp in the `payloads`
+       package - the real robot's own number. Force is a 1.5 kN class 250 mm
+       actuator through the measured moment arms: 224 mm at the lift pivot,
+       113 mm at the tilt pivot. For scale, holding the arm and a full bucket
+       out straight takes about 41 Nm. -->
+  <xacro:property name="lift_moment_arm" value="0.2239"/>
+  <xacro:property name="tilt_moment_arm" value="0.1126"/>
+  <xacro:property name="actuator_force" value="1500.0"/>
+  <xacro:property name="actuator_speed" value="0.1"/>
+  <xacro:property name="lift_effort" value="${actuator_force*lift_moment_arm}"/>
+  <xacro:property name="tilt_effort" value="${actuator_force*tilt_moment_arm}"/>
+  <xacro:property name="lift_velocity" value="${actuator_speed/lift_moment_arm}"/>
+  <xacro:property name="tilt_velocity" value="${actuator_speed/tilt_moment_arm}"/>
+
+  <!-- ══ Masses: exact CAD volume x density ══════════════════════════════ -->
+  <xacro:property name="v_frame" value="0.00051813"/>   <!-- Frame_Repaired_1     -->
+  <xacro:property name="v_plate" value="0.00015904"/>   <!-- one bearing block    -->
+  <xacro:property name="v_tube" value="0.00016847"/>    <!-- one arm, 40x20x2 tube-->
+  <xacro:property name="v_bracket" value="0.00001293"/> <!-- one actuator bracket -->
+  <xacro:property name="v_arm_mount" value="0.00003805"/><!-- one on-arm plate    -->
+  <xacro:property name="v_actuator" value="0.00040493"/><!-- one 250 mm actuator  -->
+  <xacro:property name="v_bucket" value="0.00129748"/>  <!-- the whole clamshell  -->
+
+  <xacro:property name="m_frame" value="${v_frame*bucket_density}"/>
+  <xacro:property name="m_plate" value="${v_plate*bucket_density}"/>
+  <xacro:property name="m_tube" value="${v_tube*bucket_density}"/>
+  <xacro:property name="m_bracket" value="${v_bracket*bucket_density}"/>
+  <xacro:property name="m_arm_mount" value="${v_arm_mount*bucket_density}"/>
+  <xacro:property name="m_half_act" value="${v_actuator*bucket_density/2}"/>
+  <xacro:property name="m_bucket" value="${v_bucket*bucket_density}"/>
+
+  <!-- Body totals and their inertia tensors were composed from the meshes
+       (exact tetrahedron integration, then parallel axis) plus the lumped
+       actuator halves. At 2700 kg/m3 they come to 4.210 / 2.860 / 4.050 kg.
+       Both mass and inertia are linear in density, so the scale factor below
+       keeps the whole file correct if you change bucket_density. -->
+  <xacro:property name="k" value="${bucket_density/2700.0}"/>
+
+  <material name="bucket_extrusion">
+    <color rgba="0.66 0.68 0.70 1.0"/>
+  </material>
+  <material name="bucket_arm_blue">
+    <color rgba="0.13 0.25 0.50 1.0"/>
+  </material>
+  <material name="bucket_dark">
+    <color rgba="0.20 0.22 0.25 1.0"/>
+  </material>
+  <material name="bucket_steel">
+    <color rgba="0.55 0.60 0.65 1.0"/>
+  </material>
+
+  <xacro:property name="M" value="file://$(find perseus_description)/meshes/bucket"/>
+
+  <!-- ══ Rams ════════════════════════════════════════════════════════════
+       One ram = barrel (revolute on its parent) + shaft (prismatic on the
+       barrel). `phi` rotates the joint zero so the travel range does not
+       straddle +/-pi; the follower node publishes beta + phi.
+
+       Mass is a token 20 g: the real 1.09 kg per ram is already lumped at the
+       pin locations on the frame, arm and bucket, and double-counting it here
+       would change the linkage dynamics. No collision geometry - nothing is
+       meant to hit a ram, and leaving it out keeps contact cheap.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <xacro:macro name="bucket_ram" params="name parent mesh xyz mesh_rpy axis phi mesh_xyz:='0 0 0'">
+    <link name="${prefix}${name}_barrel">
+      <inertial>
+        <origin xyz="0.15 0 0" rpy="0 0 0"/>
+        <mass value="0.02"/>
+        <xacro:box_inertia m="0.02" x="0.34" y="0.06" z="0.06"/>
+      </inertial>
+      <visual>
+        <origin xyz="${mesh_xyz}" rpy="${mesh_rpy}"/>
+        <geometry><mesh filename="${M}/${mesh}_base.stl"/></geometry>
+        <material name="bucket_steel"/>
+      </visual>
+    </link>
+
+    <joint name="${prefix}${name}_pitch_joint" type="revolute">
+      <parent link="${prefix}${parent}"/>
+      <child link="${prefix}${name}_barrel"/>
+      <origin xyz="${xyz}" rpy="0 ${phi} 0"/>
+      <axis xyz="0 -1 0"/>
+      <limit lower="-1.8" upper="1.8" effort="50" velocity="5"/>
+      <dynamics damping="0.5"/>
+    </joint>
+
+    <link name="${prefix}${name}_shaft">
+      <inertial>
+        <origin xyz="0.25 0 0" rpy="0 0 0"/>
+        <mass value="0.02"/>
+        <xacro:box_inertia m="0.02" x="0.29" y="0.02" z="0.02"/>
+      </inertial>
+      <visual>
+        <origin xyz="${mesh_xyz}" rpy="${mesh_rpy}"/>
+        <geometry><mesh filename="${M}/${mesh}_slider.stl"/></geometry>
+        <material name="bucket_dark"/>
+      </visual>
+    </link>
+
+    <joint name="${prefix}${name}_extend_joint" type="prismatic">
+      <parent link="${prefix}${name}_barrel"/>
+      <child link="${prefix}${name}_shaft"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis xyz="${axis}"/>
+      <limit lower="0" upper="${actuator_stroke}" effort="50" velocity="0.5"/>
+      <dynamics damping="0.5"/>
+    </joint>
+
+    <!-- Cosmetic: no gravity, so they hold their pose if the follower node is
+         not running rather than collapsing. -->
+    <gazebo reference="${prefix}${name}_barrel"><gravity>false</gravity></gazebo>
+    <gazebo reference="${prefix}${name}_shaft"><gravity>false</gravity></gazebo>
+  </xacro:macro>
+
+  <!--
+    parent  - link to bolt the frame to; the chassis front face by default.
+    prefix  - inherited from the caller, as rocker and sensor_mount do.
+    mount_* - override to re-site the whole attachment; nothing else changes.
+  -->
+  <xacro:macro name="bucket" params="
+      parent:='${prefix}chassis'
+      prefix:=^|''
+      mount_xyz:='${bucket_mount_x} ${bucket_mount_y} ${bucket_mount_z}'
+      mount_rpy:='0 0 0'">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Interface link, at the midpoint of the two arm pivots with base_link
+         axes: +x forward, +y left, +z up. Everything downstream hangs off it,
+         so the rest of the robot only ever needs this one name.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <link name="${prefix}bucket_mounting_frame"/>
+
+    <joint name="${prefix}bucket_mount_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}bucket_mounting_frame"/>
+      <origin xyz="${mount_xyz}" rpy="${mount_rpy}"/>
+    </joint>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Frame: a 410 x 300 mm gantry of 20x20 extrusion carrying the four
+         bearing blocks, with two rails running 243 mm back onto the chassis
+         deck. Mesh origins are the export's own transforms, re-expressed
+         about the arm-pivot midpoint.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <link name="${prefix}bucket_frame">
+      <inertial>
+        <origin xyz="-0.033899 0.019998 -0.155044" rpy="0 0 0"/>
+        <mass value="${4.2099*k}"/>
+        <inertia ixx="${0.114994*k}" ixy="${0.0*k}"      ixz="${0.001957*k}"
+                                     iyy="${0.060850*k}" iyz="${0.0*k}"
+                                                         izz="${0.072903*k}"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="-0.05910 -0.44071 -0.21300" rpy="0 0 0"/>
+        <geometry><mesh filename="${M}/Frame_Repaired_1.stl"/></geometry>
+        <material name="bucket_extrusion"/>
+      </visual>
+      <!-- four bearing blocks: upper pair carries the arms, lower pair the
+           lift actuators -->
+      <visual>
+        <origin xyz="-0.04169  0.16600 -0.21995" rpy="1.5707963 0 -1.5707963"/>
+        <geometry><mesh filename="${M}/Main_Bucket_Mount_Plate_v8_1.stl"/></geometry>
+        <material name="bucket_dark"/>
+      </visual>
+      <visual>
+        <origin xyz="-0.04169 -0.03400 -0.21995" rpy="1.5707963 0 -1.5707963"/>
+        <geometry><mesh filename="${M}/Main_Bucket_Mount_Plate_v8_2.stl"/></geometry>
+        <material name="bucket_dark"/>
+      </visual>
+      <visual>
+        <origin xyz="-0.04169 -0.03400  0.02005" rpy="1.5707963 0 -1.5707963"/>
+        <geometry><mesh filename="${M}/Main_Bucket_Mount_Plate_v8_3.stl"/></geometry>
+        <material name="bucket_dark"/>
+      </visual>
+      <visual>
+        <origin xyz="-0.04169  0.16600  0.02005" rpy="1.5707963 0 -1.5707963"/>
+        <geometry><mesh filename="${M}/Main_Bucket_Mount_Plate_v8_4.stl"/></geometry>
+        <material name="bucket_dark"/>
+      </visual>
+
+      <!-- Boxes, not the mesh. This link welds into the chassis during SDF
+           conversion anyway, so a 672 kB concave mesh collision would cost
+           contact time for nothing. Extents are the measured mesh bounds. -->
+      <collision name="${prefix}bucket_gantry_collision">
+        <origin xyz="-0.05040 0.02000 -0.12000" rpy="0 0 0"/>
+        <geometry><box size="0.020 0.410 0.300"/></geometry>
+      </collision>
+      <collision name="${prefix}bucket_rail_left_collision">
+        <origin xyz="-0.18060 0.20500 -0.18500" rpy="0 0 0"/>
+        <geometry><box size="0.243 0.020 0.020"/></geometry>
+      </collision>
+      <collision name="${prefix}bucket_rail_right_collision">
+        <origin xyz="-0.18060 -0.16500 -0.18500" rpy="0 0 0"/>
+        <geometry><box size="0.243 0.020 0.020"/></geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}bucket_frame_joint" type="fixed">
+      <parent link="${prefix}bucket_mounting_frame"/>
+      <child link="${prefix}bucket_frame"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Arms: both tubes, both lift brackets, the tilt-actuator plate and its
+         bracket, as one rigid body - the bucket pins them together at the far
+         end so they cannot move relative to each other.
+
+         Both tubes are the same part ("Left Arm - Square Tube" <1> and <2>);
+         there is no right-hand mirror in the CAD, so both are offset the same
+         way from their pivots rather than symmetrically. That is reproduced
+         faithfully here.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <link name="${prefix}bucket_arm">
+      <inertial>
+        <origin xyz="0.407179 0.019695 -0.000497" rpy="0 0 0"/>
+        <mass value="${2.8599*k}"/>
+        <inertia ixx="${0.022280*k}" ixy="${0.000424*k}" ixz="${0.004437*k}"
+                                     iyy="${0.125578*k}" iyz="${0.000055*k}"
+                                                         izz="${0.147197*k}"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.00004  0.10000 -0.00001" rpy="1.5707963 0 0"/>
+        <geometry><mesh filename="${M}/Left_Arm_-_Square_Tube_1.stl"/></geometry>
+        <material name="bucket_arm_blue"/>
+      </visual>
+      <visual>
+        <origin xyz="0.00004 -0.10000 -0.00001" rpy="1.5707963 0 0"/>
+        <geometry><mesh filename="${M}/Left_Arm_-_Square_Tube_2.stl"/></geometry>
+        <material name="bucket_arm_blue"/>
+      </visual>
+      <visual>
+        <origin xyz="0.59704 -0.08000 -0.01001" rpy="0 0 -1.5707963"/>
+        <geometry><mesh filename="${M}/Actuator_Bracket_1.stl"/></geometry>
+        <material name="bucket_dark"/>
+      </visual>
+      <visual>
+        <origin xyz="0.59704  0.12000 -0.01001" rpy="0 0 -1.5707963"/>
+        <geometry><mesh filename="${M}/Actuator_Bracket_2.stl"/></geometry>
+        <material name="bucket_dark"/>
+      </visual>
+      <visual>
+        <origin xyz="0.22674 -0.08000  0.00999" rpy="3.1415927 0 0"/>
+        <geometry><mesh filename="${M}/Acutator_on_Arm_Mount_1.stl"/></geometry>
+        <material name="bucket_steel"/>
+      </visual>
+      <visual>
+        <origin xyz="0.17904 -0.08000  0.01199" rpy="0 0 0"/>
+        <geometry><mesh filename="${M}/Acutator_on_Arm_Mount_3.stl"/></geometry>
+        <material name="bucket_steel"/>
+      </visual>
+      <visual>
+        <origin xyz="0.18674  0.02000  0.01399" rpy="-3.1415927 0 -1.5707963"/>
+        <geometry><mesh filename="${M}/Actuator_Bracket_4.stl"/></geometry>
+        <material name="bucket_dark"/>
+      </visual>
+
+      <!-- one box per tube, sized from the measured 750 x 40 x 20 extents -->
+      <collision name="${prefix}bucket_arm_left_collision">
+        <origin xyz="0.35200 0.12000 0.00000" rpy="0 0 0"/>
+        <geometry><box size="0.750 0.040 0.020"/></geometry>
+      </collision>
+      <collision name="${prefix}bucket_arm_right_collision">
+        <origin xyz="0.35200 -0.08000 0.00000" rpy="0 0 0"/>
+        <geometry><box size="0.750 0.040 0.020"/></geometry>
+      </collision>
+    </link>
+
+    <!-- Positive raises. Zero is the top of travel, with the arms 6.24 deg
+         below the frame axis because that is as far as the actuators reach. -->
+    <joint name="${prefix}bucket_lift_joint" type="revolute">
+      <parent link="${prefix}bucket_frame"/>
+      <child link="${prefix}bucket_arm"/>
+      <origin xyz="0 0 0" rpy="0 ${lift_zero_pitch} 0"/>
+      <axis xyz="0 -1 0"/>
+      <limit lower="${lift_lower}" upper="${lift_upper}"
+             effort="${lift_effort}" velocity="${lift_velocity}"/>
+      <!-- These are self-locking screw actuators, so the linkage is heavily
+           damped rather than free-swinging. It also keeps the position PID
+           from ringing. -->
+      <dynamics damping="20.0" friction="5.0"/>
+    </joint>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Bucket. Link origin is the tilt pivot; the scoop sits forward of and
+         above it. Measured envelope, in this frame: x -0.046..0.210 deep,
+         y -0.108..0.352 wide (459 mm), z -0.044..0.192 tall.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <link name="${prefix}bucket">
+      <inertial>
+        <origin xyz="0.035308 0.120650 0.040549" rpy="0 0 0"/>
+        <mass value="${4.0499*k}"/>
+        <inertia ixx="${0.110028*k}" ixy="${0.000050*k}" ixz="${0.000734*k}"
+                                     iyy="${0.023912*k}" iyz="${0.000452*k}"
+                                                         izz="${0.103688*k}"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 -1.5707963 -1.5707963"/>
+        <geometry><mesh filename="${M}/Bucket_1.stl"/></geometry>
+        <material name="bucket_steel"/>
+      </visual>
+
+      <!-- Four boxes fitted to the measured plate positions: floor, rear wall
+           and the two side structures. Keeping them separate is what makes the
+           scoop concave to the physics engine - one bounding box would be a
+           brick, and the 637 kB concave mesh is neither fast nor stable as a
+           collision shape. The floor spans the gap between the clamshell
+           halves, i.e. the jaws are simulated closed. -->
+      <collision name="${prefix}bucket_floor_collision">
+        <origin xyz="0.12500 0.12200 -0.03900" rpy="0 0 0"/>
+        <geometry><box size="0.170 0.460 0.010"/></geometry>
+      </collision>
+      <collision name="${prefix}bucket_rear_collision">
+        <origin xyz="0.04500 0.12200 0.03300" rpy="0 0 0"/>
+        <geometry><box size="0.010 0.460 0.145"/></geometry>
+      </collision>
+      <collision name="${prefix}bucket_side_left_collision">
+        <origin xyz="0.12500 0.32700 0.03600" rpy="0 0 0"/>
+        <geometry><box size="0.170 0.049 0.150"/></geometry>
+      </collision>
+      <collision name="${prefix}bucket_side_right_collision">
+        <origin xyz="0.12500 -0.09600 0.03600" rpy="0 0 0"/>
+        <geometry><box size="0.170 0.023 0.150"/></geometry>
+      </collision>
+    </link>
+
+    <!-- Positive curls the scoop back to retain a load; negative dumps.
+         Zero is the CAD pose. -->
+    <joint name="${prefix}bucket_tilt_joint" type="revolute">
+      <parent link="${prefix}bucket_arm"/>
+      <child link="${prefix}bucket"/>
+      <origin xyz="${arm_length} ${bucket_pivot_y} -0.00001" rpy="0 0 0"/>
+      <axis xyz="0 -1 0"/>
+      <limit lower="${tilt_lower}" upper="${tilt_upper}"
+             effort="${tilt_effort}" velocity="${tilt_velocity}"/>
+      <dynamics damping="10.0" friction="2.0"/>
+    </joint>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         The three 250 mm rams. Pivots and mesh orientations are the export's
+         own transforms; both lift rams share one angle and one extension
+         because their pivots and brackets differ only laterally.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <!-- The pivot y values are the CAD ones shifted by ~10 mm so that each rod
+         end lands exactly on its bracket. In the real machine the ram pivots
+         and the brackets they drive are ~10 mm apart laterally and the rod-end
+         bearings take up the skew; a revolute joint cannot, so the skew is
+         moved to the base pin instead, where it is buried inside the bearing
+         block rather than showing as a gap at the visible rod end. Verified
+         over the whole workspace: rod end lands within 0.01 mm. -->
+    <xacro:bucket_ram name="ram_lift_left"  parent="bucket_frame" mesh="250mm_Actuator_1"
+                      xyz="0.00004 0.119074 -0.24001"
+                      mesh_rpy="0 -1.5707963 -1.5707963" axis="1 0 0" phi="0"/>
+    <xacro:bucket_ram name="ram_lift_right" parent="bucket_frame" mesh="250mm_Actuator_2"
+                      xyz="0.00004 -0.079074 -0.24001"
+                      mesh_rpy="0 -1.5707963 1.5707963" axis="1 0 0" phi="0"/>
+    <!-- The tilt ram's barrel is bolted to the plate on the ARMS (the
+         Acutator_on_Arm_Mount pair, via Actuator_Bracket_4) and its rod reaches
+         forward to the bucket. The CAD export describes it the other way round
+         - Revolute_9's parent is Bucket_1 - because the toolkit roots each mate
+         at whichever body it walked to first; anchoring it to the arm is what
+         the machine actually does, and it is what makes the barrel stay put
+         while the rod telescopes.
+
+         mesh_xyz places the actuator mesh so its arm-side pin sits on the joint
+         rather than its origin. -->
+    <xacro:bucket_ram name="ram_tilt" parent="bucket_arm" mesh="250mm_Actuator_3"
+                      xyz="0.18674 0.030248 0.01399"
+                      mesh_xyz="0.365 -0.02025 0"
+                      mesh_rpy="0 1.5707963 -1.5707963" axis="1 0 0" phi="0"/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Gazebo
+         ═══════════════════════════════════════════════════════════════════ -->
+    <!-- The cutting edge needs grip to bite rather than skate. -->
+    <gazebo reference="${prefix}bucket">
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+    </gazebo>
+    <gazebo reference="${prefix}bucket_arm">
+      <mu1>0.6</mu1>
+      <mu2>0.6</mu2>
+    </gazebo>
+
+    <!--
+      The bucket joints are deliberately NOT in the <ros2_control> block. On
+      the real robot they are not ros2_control joints either - bucket_driver in
+      the `payloads` package drives them straight over CAN. Gazebo's own
+      position controllers give the same shape of interface without pulling in
+      ros2_controllers packages that are absent from the pixi environment
+      (only diff_drive, mecanum_drive and joint_state_broadcaster are there).
+
+      Command them, in radians, absolute:
+        ros2 topic pub /bucket/lift/cmd_pos std_msgs/msg/Float64 "{data: -0.6}"
+        ros2 topic pub /bucket/tilt/cmd_pos std_msgs/msg/Float64 "{data: 0.8}"
+      Both are bridged in perseus_simulation/config/gz_bridge.yaml.
+
+      Gains hold a loaded arm: worst-case static torque at the lift pivot is
+      about 41 Nm, so p_gain has to make that from a small error. cmd_max is
+      the joint's own effort limit.
+    -->
+    <gazebo>
+      <plugin filename="gz-sim-joint-position-controller-system"
+              name="gz::sim::systems::JointPositionController">
+        <joint_name>${prefix}bucket_lift_joint</joint_name>
+        <topic>/bucket/lift/cmd_pos</topic>
+        <!--
+          Sized from the mechanics rather than by twiddling. The arm plus
+          bucket present about 2.8 kg.m2 at this pivot and need up to 41 Nm to
+          hold out straight, so p has to make that torque from an error small
+          enough to be invisible: 8000 does it in 0.005 rad. d is then set for
+          roughly critical damping at the resulting 53 rad/s, and i only has to
+          mop up what is left - bounded well below the gravity load so a large
+          step cannot wind it up into an overshoot.
+        -->
+        <p_gain>8000</p_gain>
+        <i_gain>300</i_gain>
+        <d_gain>400</d_gain>
+        <i_max>80</i_max>
+        <i_min>-80</i_min>
+        <cmd_max>${lift_effort}</cmd_max>
+        <cmd_min>${-lift_effort}</cmd_min>
+        <initial_position>0.0</initial_position>
+      </plugin>
+
+      <plugin filename="gz-sim-joint-position-controller-system"
+              name="gz::sim::systems::JointPositionController">
+        <joint_name>${prefix}bucket_tilt_joint</joint_name>
+        <topic>/bucket/tilt/cmd_pos</topic>
+        <!-- The bucket alone is only ~0.036 kg.m2 about the tilt pin and
+             needs ~2 Nm to hold, so this joint wants far softer gains than the
+             lift. Pushing p much past 1000 puts the natural frequency close to
+             what a 1 ms step can integrate. -->
+        <p_gain>1000</p_gain>
+        <i_gain>400</i_gain>
+        <d_gain>100</d_gain>
+        <i_max>40</i_max>
+        <i_min>-40</i_min>
+        <cmd_max>${tilt_effort}</cmd_max>
+        <cmd_min>${-tilt_effort}</cmd_min>
+        <initial_position>0.0</initial_position>
+      </plugin>
+
+      <!--
+        joint_state_broadcaster only reports the four wheel joints, because
+        only those are in <ros2_control>. Without this the bucket joints never
+        reach robot_state_publisher and the attachment sits frozen at zero in
+        RViz however it moves in Gazebo.
+
+        The topic matches the `joint_state` entry already in gz_bridge.yaml,
+        and only the two bucket joints are listed so nothing fights
+        joint_state_broadcaster over the wheels.
+      -->
+      <plugin filename="gz-sim-joint-state-publisher-system"
+              name="gz::sim::systems::JointStatePublisher">
+        <topic>joint_state</topic>
+        <joint_name>${prefix}bucket_lift_joint</joint_name>
+        <joint_name>${prefix}bucket_tilt_joint</joint_name>
+        <joint_name>${prefix}ram_lift_left_pitch_joint</joint_name>
+        <joint_name>${prefix}ram_lift_left_extend_joint</joint_name>
+        <joint_name>${prefix}ram_lift_right_pitch_joint</joint_name>
+        <joint_name>${prefix}ram_lift_right_extend_joint</joint_name>
+        <joint_name>${prefix}ram_tilt_pitch_joint</joint_name>
+        <joint_name>${prefix}ram_tilt_extend_joint</joint_name>
+      </plugin>
+
+      <!--
+        Ram followers. Both lift rams subscribe to the SAME pair of topics -
+        their geometry is identical bar a lateral offset - so the follower node
+        only has to publish four numbers.
+
+        These links are near-massless with gravity off, so the gains only have
+        to overcome joint damping. Keeping them low avoids adding a stiff,
+        pointless mode to the solver.
+      -->
+      <xacro:macro name="ram_follower" params="joint topic kind">
+        <plugin filename="gz-sim-joint-position-controller-system"
+                name="gz::sim::systems::JointPositionController">
+          <joint_name>${prefix}${joint}</joint_name>
+          <topic>${topic}</topic>
+          <xacro:if value="${kind == 'pitch'}">
+            <p_gain>20</p_gain><i_gain>2</i_gain><d_gain>2</d_gain>
+          </xacro:if>
+          <xacro:unless value="${kind == 'pitch'}">
+            <p_gain>200</p_gain><i_gain>20</i_gain><d_gain>10</d_gain>
+          </xacro:unless>
+          <i_max>5</i_max>
+          <i_min>-5</i_min>
+          <cmd_max>50</cmd_max>
+          <cmd_min>-50</cmd_min>
+          <initial_position>0.0</initial_position>
+        </plugin>
+      </xacro:macro>
+
+      <xacro:ram_follower joint="ram_lift_left_pitch_joint"   topic="/bucket/ram_lift/cmd_angle"  kind="pitch"/>
+      <xacro:ram_follower joint="ram_lift_right_pitch_joint"  topic="/bucket/ram_lift/cmd_angle"  kind="pitch"/>
+      <xacro:ram_follower joint="ram_lift_left_extend_joint"  topic="/bucket/ram_lift/cmd_extend" kind="extend"/>
+      <xacro:ram_follower joint="ram_lift_right_extend_joint" topic="/bucket/ram_lift/cmd_extend" kind="extend"/>
+      <xacro:ram_follower joint="ram_tilt_pitch_joint"        topic="/bucket/ram_tilt/cmd_angle"  kind="pitch"/>
+      <xacro:ram_follower joint="ram_tilt_extend_joint"       topic="/bucket/ram_tilt/cmd_extend" kind="extend"/>
+    </gazebo>
+
+    <!--
+      ⚠ The gantry stands where the sensor mast is.
+
+      With the mount above, the gantry occupies base_link x 0.600..0.617,
+      z 0.473..0.773. The Livox sits at base_link (0.600, 0, 0.700) and the
+      D455 at (0.600, 0, 0.600) - both inside the gantry's 410 x 300 window
+      rather than inside a beam, so nothing is buried in solid metal, but the
+      LiDAR does look out through the frame and will return hits off its
+      members. That is true of the real rover too, so it is left as it is
+      rather than quietly moved. If you want them separated, change
+      bucket_mount_x/z here - nothing else depends on them.
+    -->
+
+  </xacro:macro>
+</robot>

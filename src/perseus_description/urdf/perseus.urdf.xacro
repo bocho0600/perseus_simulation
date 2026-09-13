@@ -78,6 +78,7 @@
     <xacro:include filename="$(find perseus_description)/urdf/sensors.urdf.xacro"/>
     <xacro:include filename="$(find perseus_description)/urdf/sensor_mount.urdf.xacro"/>
     <xacro:include filename="$(find perseus_description)/urdf/camera_d455_gazebo.xacro"/>
+    <xacro:include filename="$(find perseus_description)/urdf/bucket.urdf.xacro"/>
     <xacro:include filename="$(find realsense2_description)/urdf/_d455.urdf.xacro"/>
 
     <!-- An empty base_link to attach everything to -->
@@ -110,6 +111,16 @@
 
     <!-- Livox and RealSense both hang off the mast: see sensor_mount.urdf.xacro -->
     <xacro:sensor_mount prefix="${prefix}"/>
+
+    <!--
+      Excavation bucket, bolted to the front face of the chassis. Off by
+      default so every existing launch keeps the bare rover; the simulation
+      turns it on. See bucket.urdf.xacro for the geometry and for how the
+      four-bar linkage is reduced to its two driven joints.
+    -->
+    <xacro:if value="$(arg use_bucket)">
+      <xacro:bucket parent="${prefix}chassis"/>
+    </xacro:if>
 
   </xacro:macro>
   

@@ -19,6 +19,9 @@
   <exec_depend>ros_gz_image</exec_depend>
   <exec_depend>ros_gz_interfaces</exec_depend>
   <exec_depend>gz_ros2_control</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
   <exec_depend>rosbridge_server</exec_depend>
   <exec_depend>twist_mux</exec_depend>
   <exec_depend>twist_stamper</exec_depend>
