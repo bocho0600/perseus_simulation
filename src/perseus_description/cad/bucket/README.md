@@ -124,8 +124,9 @@ geometric fold at 0°.
    `Base Actuator v6` + `Shaft v7` with a real slider mate, and the bucket into
    its two clamshell halves. That would give genuine prismatic joints and the
    jaws DOF instead of lumped rigid bodies.
-3. **Measure how the frame actually bolts on** and set `bucket_mount_{x,y,z}`.
-   The current values put the rails flat on the chassis deck, which is what the
-   rail geometry implies but has not been confirmed against the real rover.
+3. **Confirm `bucket_mount_{x,y,z}` against the real rover.** The rails bolt to
+   the underside of the chassis, so the current values sit the rail top face
+   flush with the chassis floor; x is set so the gantry front face is 17 mm
+   ahead of the chassis front face.
 4. **Set the mate limits in Onshape** so the export stops emitting ±360° on
    every pin.

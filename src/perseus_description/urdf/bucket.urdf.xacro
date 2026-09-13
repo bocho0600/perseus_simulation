@@ -86,22 +86,23 @@
   <xacro:property name="bucket_density" value="2700.0"/>
 
   <!-- ══ Where the attachment sits on the rover ═══════════════════════════
-       DERIVED, but check it against the real machine.
-
        The frame's two rearward rails run 243 mm back from the gantry at
-       z = 0.018..0.038 in frame coordinates, 390 mm apart. The rover chassis
-       is 450 mm wide with its deck at chassis z = 0.2, so the rails land on
-       the deck just inside its edges - that is plainly how this bolts on, and
-       it fixes both x and z:
+       z = 0.018..0.038 in frame coordinates, 390 mm apart. They bolt to the
+       UNDERSIDE of the chassis, so the rail top face sits flush with the
+       chassis floor. The chassis link origin is the centre of its front face
+       at the bottom, so that floor is chassis z = 0:
 
-         z: deck top 0.200 + (arm pivot 0.213 - rail underside 0.018) = 0.395
+         z: 0 - (rail top 0.038 - arm pivot 0.213) = 0.175
          x: gantry front face 17 mm ahead of the chassis front face = 0.0591
 
-       Note this puts the gantry around the sensor mast - see the warning at
-       the bottom of this file. -->
+       That puts the rails at chassis z -0.020..0.000 (base_link 0.330..0.350)
+       and the gantry at base_link 0.255..0.555 - hanging 95 mm below the
+       chassis floor, with 255 mm of ground clearance against a 150 mm wheel
+       radius. It also drops the gantry top clear of the Livox at base_link
+       0.700 by 145 mm, which an earlier deck-mounted guess did not. -->
   <xacro:property name="bucket_mount_x" value="0.0591"/>
   <xacro:property name="bucket_mount_y" value="0.0"/>
-  <xacro:property name="bucket_mount_z" value="0.395"/>
+  <xacro:property name="bucket_mount_z" value="0.175"/>
 
   <!-- ══ Linkage geometry ════════════════════════════════════════════════
        All MEASURED, by forward-kinematicking the export's mate transforms
@@ -678,16 +679,11 @@
     </gazebo>
 
     <!--
-      ⚠ The gantry stands where the sensor mast is.
-
-      With the mount above, the gantry occupies base_link x 0.600..0.617,
-      z 0.473..0.773. The Livox sits at base_link (0.600, 0, 0.700) and the
-      D455 at (0.600, 0, 0.600) - both inside the gantry's 410 x 300 window
-      rather than inside a beam, so nothing is buried in solid metal, but the
-      LiDAR does look out through the frame and will return hits off its
-      members. That is true of the real rover too, so it is left as it is
-      rather than quietly moved. If you want them separated, change
-      bucket_mount_x/z here - nothing else depends on them.
+      Sensor clearance: the gantry occupies base_link x 0.600..0.617,
+      z 0.255..0.555. The Livox at (0.600, 0, 0.700) and the D455 at
+      (0.600, 0, 0.600) both clear its top. The bucket itself is still in the
+      LiDAR's forward-down view when the arms are raised, which is true of the
+      real machine as well.
     -->
 
   </xacro:macro>

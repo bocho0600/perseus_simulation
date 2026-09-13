@@ -183,26 +183,31 @@ evidence.
 ```xml
 <xacro:property name="bucket_mount_x" value="0.0591"/>
 <xacro:property name="bucket_mount_y" value="0.0"/>
-<xacro:property name="bucket_mount_z" value="0.395"/>
+<xacro:property name="bucket_mount_z" value="0.175"/>
 ```
 
-Derived, not guessed. The frame's two rearward rails run 243 mm back from the
-gantry at z = 0.018–0.038 in frame coordinates, 390 mm apart. The chassis is
-450 mm wide with its deck at chassis z = 0.2, so the rails land on the deck just
-inside its edges, which fixes both numbers:
+The frame's two rearward rails run 243 mm back from the gantry at z = 0.018–0.038
+in frame coordinates, 390 mm apart. **They bolt to the underside of the
+chassis**, so the rail top face sits flush with the chassis floor. The chassis
+link origin is the centre of its **front face at the bottom** — the body runs
+backwards in −x and upwards in +z from there — so that floor is chassis z = 0:
 
 ```
-z = deck top 0.200 + (arm pivot 0.213 − rail underside 0.018) = 0.395
-x = gantry front face 17 mm ahead of the chassis front face   = 0.0591
+z = 0 − (rail top 0.038 − arm pivot 0.213)                  = 0.175
+x = gantry front face 17 mm ahead of the chassis front face = 0.0591
 ```
 
-The chassis link origin is the centre of its **front face at the bottom** — the
-body runs backwards in −x and upwards in +z from there.
+Resulting layout:
 
-⚠ **This puts the gantry around the sensor mast.** See the known issues in the
-changelog; roughly 40% of the Livox's horizontal ring becomes self-return. Both
-`bucket_mount_x` and `bucket_mount_z` are single properties if you need to move
-it.
+| | chassis z | base_link z |
+|---|---|---|
+| rails | −0.020 … 0.000 | 0.330 … 0.350 |
+| gantry | −0.095 … +0.205 | 0.255 … 0.555 |
+| arm pivot | +0.175 | 0.525 |
+
+So the gantry hangs 95 mm below the chassis floor with 255 mm of ground
+clearance against a 150 mm wheel radius, and its top clears the Livox at
+base_link 0.700 by 145 mm.
 
 ---
 

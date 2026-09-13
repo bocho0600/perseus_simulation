@@ -171,15 +171,15 @@ over the wheels.
 
 ## Known issues
 
-- **The frame gantry stands around the sensor mast.** With the CAD-derived
-  mount the gantry occupies base_link x 0.600–0.617, z 0.473–0.773; the Livox is
-  at (0.600, 0, 0.700) — inside the gantry's window, not inside a beam.
-  Measured cost: the horizontal LiDAR ring goes from 240 returns (none closer
-  than 1 m) to 307, of which 78 are clipped at the 0.1 m sensor minimum and 46
-  more hit rover structure. **About 40% of the ring becomes the machine
-  itself.** This is physically true of the real rover with this attachment, so
-  it is left as-is rather than quietly moved. Either add a crop-box self-filter
-  before fast_lio, or correct `bucket_mount_x`/`bucket_mount_z`.
+- **~19% of the Livox horizontal ring is the bucket.** Measured: 239 returns
+  with the bucket on, of which 45 fall in 0.15–1 m and are the arms and bucket
+  ahead of the rover. None are clipped at the sensor minimum. That is physically
+  true of the real machine — a front loader's bucket is in its own forward-down
+  view — so a crop-box self-filter before fast_lio is the fix, not a model
+  change. (An earlier deck-mounted guess at the mount was far worse: 307
+  returns of which 78 were clipped at the 0.1 m minimum, ~40% of the ring lost.
+  Bolting the rails under the chassis, which is how it actually mounts, removed
+  all of the min-range blockage.)
 - **Masses depend on one assumed density** (2700 kg/m³, 6061 aluminium). The
   volumes are exact; only the density is a guess. Assigning materials in Onshape
   and re-exporting is the only real fix.
