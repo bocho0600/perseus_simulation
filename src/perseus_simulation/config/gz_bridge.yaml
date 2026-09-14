@@ -10,29 +10,15 @@
   ros_type_name: "tf2_msgs/msg/TFMessage"
   gz_type_name: "gz.msgs.Pose_V"
   direction: GZ_TO_ROS
-- ros_topic_name: "gazebo_odom"
-  gz_topic_name: "odom"
-  ros_type_name: "nav_msgs/msg/Odometry"
-  gz_type_name: "gz.msgs.Odometry"
-  direction: GZ_TO_ROS
 - ros_topic_name: "joint_states"
   gz_topic_name: "joint_state"
   ros_type_name: "sensor_msgs/msg/JointState"
   gz_type_name: "gz.msgs.Model"
   direction: GZ_TO_ROS
-# 2D lidar: no Gazebo sensor is instantiated (see sensors.urdf.xacro), so there is
-# nothing to bridge on "scan".
-# 3D lidar
-- ros_topic_name: "scan_3d"
-  gz_topic_name: "scan_3d"
-  ros_type_name: "sensor_msgs/msg/LaserScan"
-  gz_type_name: "gz.msgs.LaserScan"
-  direction: GZ_TO_ROS
-- ros_topic_name: "imu"
-  gz_topic_name: "imu"
-  ros_type_name: "sensor_msgs/msg/Imu"
-  gz_type_name: "gz.msgs.IMU"
-  direction: GZ_TO_ROS
+# The only sensor data this stack consumes is the RealSense D455 and the Livox
+# MID-360, bridged below. Everything else Gazebo could offer (ground-truth
+# odom, a duplicate scan_3d/imu pair under bare topic names superseded by
+# /livox/lidar and /livox/imu further down) has been dropped.
 # ─── RealSense D455 ──────────────────────────────────────────────────────────
 # Every camera entry is lazy: the bridge only subscribes to the gz topic once a
 # ROS subscriber appears. That is what makes always_on false in
@@ -67,8 +53,13 @@
 # colour sensor is a plain camera rather than an rgbd_camera, so there is no
 # aligned_depth_to_color either. See camera_d455_gazebo.xacro.
 # ─── Infra1 (Left IR) ────────────────────────────────────────────────────────
-- ros_topic_name: "/camera/camera/infra1/image_raw"
-  gz_topic_name: "/camera/camera/infra1/image_raw"
+# Named image_rect_raw, not image_raw, even though nothing here actually
+# rectifies anything: a synthetic pinhole camera has zero distortion, so the
+# raw render already is the rectified image. Naming it to match lets every
+# consumer (vision/stereo_odometry included) use the real driver's topic name
+# unmodified, with no sim-only remap.
+- ros_topic_name: "/camera/camera/infra1/image_rect_raw"
+  gz_topic_name: "/camera/camera/infra1/image_rect_raw"
   ros_type_name: "sensor_msgs/msg/Image"
   gz_type_name: "gz.msgs.Image"
   direction: GZ_TO_ROS
@@ -80,8 +71,8 @@
   direction: GZ_TO_ROS
   lazy: true
 # ─── Infra2 (Right IR) ───────────────────────────────────────────────────────
-- ros_topic_name: "/camera/camera/infra2/image_raw"
-  gz_topic_name: "/camera/camera/infra2/image_raw"
+- ros_topic_name: "/camera/camera/infra2/image_rect_raw"
+  gz_topic_name: "/camera/camera/infra2/image_rect_raw"
   ros_type_name: "sensor_msgs/msg/Image"
   gz_type_name: "gz.msgs.Image"
   direction: GZ_TO_ROS
