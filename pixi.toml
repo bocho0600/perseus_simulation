@@ -43,7 +43,13 @@ cmd = "bash scripts/pixi-run.sh colcon build --symlink-install --event-handlers 
 [tasks.sim]
 description = "Build and launch the Perseus Gazebo simulation"
 depends-on = ["build"]
-cmd = "bash scripts/pixi-run.sh bash -c 'source install/setup.bash && ros2 launch perseus_simulation perseus_sim.launch.py'"
+# `"$@"` plus the trailing `--` forward anything after `pixi run sim` on to
+# `ros2 launch`, so `pixi run sim payload:=none` works. Without them pixi
+# appends the extra args to the OUTER command line, where they become
+# positional args of `bash -c` ($0, $1, ...) and are silently dropped: the sim
+# comes up with defaults and nothing warns you. The `--` takes $0 so the first
+# real argument lands in $1, where "$@" picks it up.
+cmd = "bash scripts/pixi-run.sh bash -c 'source install/setup.bash && ros2 launch perseus_simulation perseus_sim.launch.py \"$@\"' --"
 
 [tasks.teleop]
 description = "Drive the rover with the keyboard (run in a second terminal)"
