@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import (
     PathJoinSubstitution,
     LaunchConfiguration,
@@ -15,6 +15,7 @@ def generate_launch_description():
         "hardware_plugin", default="mock_components/GenericSystem"
     )
     can_bus = LaunchConfiguration("can_bus", default="")
+    payload = LaunchConfiguration("payload")
 
     rsp_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -32,6 +33,7 @@ def generate_launch_description():
             "use_sim_time": use_sim_time,
             "hardware_plugin": hardware_plugin,
             "can_bus": can_bus,
+            "payload": payload,
         }.items(),
     )
 
@@ -69,6 +71,14 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
+            DeclareLaunchArgument(
+                "payload",
+                default_value="none",
+                description=(
+                    "Payload attachment to include on the chassis. Set to "
+                    "'bucket' to add the bucket mount"
+                ),
+            ),
             rsp_launch,
             rviz,
             joint_state_publisher_gui,

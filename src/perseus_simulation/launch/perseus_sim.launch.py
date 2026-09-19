@@ -21,7 +21,7 @@ def generate_launch_description():
     # ARGUMENTS
     use_sim_time = LaunchConfiguration("use_sim_time")
     launch_ekf = LaunchConfiguration("launch_ekf")
-    use_bucket = LaunchConfiguration("use_bucket")
+    payload = LaunchConfiguration("payload")
 
     arguments = [
         DeclareLaunchArgument(
@@ -35,9 +35,9 @@ def generate_launch_description():
             description="If true, launch the EKF filter node",
         ),
         DeclareLaunchArgument(
-            "use_bucket",
-            default_value="true",
-            description="If true, attach the excavation bucket to the rover",
+            "payload",
+            default_value="bucket",
+            description="Which payload to attach to the rover; 'none' for the bare rover",
         ),
     ]
     # IMPORTED LAUNCH FILES
@@ -72,7 +72,7 @@ def generate_launch_description():
         launch_arguments={
             "use_sim_time": use_sim_time,
             "hardware_plugin": "gz_ros2_control/GazeboSimSystem",
-            "use_bucket": use_bucket,
+            "payload": payload,
         }.items(),
     )
     controllers_launch = IncludeLaunchDescription(
@@ -134,19 +134,6 @@ def generate_launch_description():
         actions=[ekf_node],
         condition=IfCondition(launch_ekf),
     )
-    # Drives the bucket's three rams so they track the linkage. Cosmetic: the
-    # rams carry no mass or collision, so the sim is correct without it - they
-    # just hold their pose. See scripts/bucket_ram_follower.py for why Gazebo
-    # cannot do this itself.
-    bucket_ram_follower = Node(
-        package="perseus_simulation",
-        executable="bucket_ram_follower.py",
-        name="bucket_ram_follower",
-        parameters=[{"use_sim_time": use_sim_time}],
-        output="both",
-        condition=IfCondition(use_bucket),
-    )
-
     rosbridge_launch = IncludeLaunchDescription(
         AnyLaunchDescriptionSource(
             [
@@ -186,7 +173,6 @@ def generate_launch_description():
         ekf_delayed,
         rosbridge_launch,
         twist_mux_launch,
-        bucket_ram_follower,
         # rviz,
     ]
 

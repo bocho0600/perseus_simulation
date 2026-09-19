@@ -76,9 +76,6 @@ foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
 endforeach()
 
 # INSTALL (ROS)
-install(PROGRAMS scripts/bucket_ram_follower.py
-        DESTINATION lib/${PROJECT_NAME})
-
 install(
   DIRECTORY config
             launch
