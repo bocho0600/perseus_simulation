@@ -81,6 +81,27 @@ for v in GEM_HOME GEM_PATH RUBYLIB; do
   keep_env_gems "$v"
 done
 
+# Same treatment for Gazebo's own search paths. `gz` discovers its subcommands
+# from YAML config files found via GZ_CONFIG_PATH, so a value inherited from a
+# foreign environment makes it look in the wrong place and find none of them:
+#
+#   $ gz --commands
+#   sdf
+#
+# `gz sim` is then not a known command, the server exits 255 immediately, and
+# the launch carries on without it - so what you see is ros_gz_sim repeating
+# "Requesting list of world names." forever and no Gazebo window, with the real
+# error scrolled far up as a bare `gz` help listing.
+#
+# This bites when the sim is started from a shell that still has the perseus-v3
+# nix devenv active: that exports GZ_CONFIG_PATH pointing into /nix/store, which
+# the /opt/ros filtering above does not touch. Dropping the foreign entries
+# leaves gz to fall back to its built-in default under CONDA_PREFIX, which is
+# the one we want.
+for v in GZ_CONFIG_PATH GZ_SIM_SYSTEM_PLUGIN_PATH GZ_SIM_RESOURCE_PATH; do
+  keep_env_gems "$v"
+done
+
 # Use CycloneDDS, the middleware perseus-v3 runs. This is about the point cloud,
 # not just parity. /livox/lidar is 737 KB per message (720 x 32 points x 32
 # bytes) at 10 Hz, and measured on this world with the rover spawned:
