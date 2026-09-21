@@ -25,6 +25,7 @@ GZ_SIM_RESOURCE_PATH = "$CONDA_PREFIX/share"
 #   pixi run build    # build the colcon workspace
 #   pixi run sim      # build (incrementally) + launch the Gazebo simulation
 #   pixi run teleop   # drive the rover with the keyboard (second terminal)
+#   pixi run view     # view the description (bucket attached; `pixi run view none` for bare)
 #   pixi run clean    # remove colcon build artifacts
 [tasks.fetch-deps]
 description = "Clone third-party ROS packages not published on RoboStack"
@@ -48,6 +49,12 @@ cmd = "bash scripts/pixi-run.sh bash -c 'source install/setup.bash && ros2 launc
 [tasks.teleop]
 description = "Drive the rover with the keyboard (run in a second terminal)"
 cmd = "bash scripts/pixi-run.sh bash -c 'source install/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=true --remap cmd_vel:=/cmd_vel_out'"
+[tasks.view]
+description = "View the robot description in RViz with a slider GUI: pixi run view [none|bucket]"
+depends-on = ["build"]
+args = [{ arg = "payload", default = "bucket" }]
+cmd = "bash scripts/pixi-run.sh bash -c 'source install/setup.bash && ros2 launch perseus_description view_perseus.launch.py payload:={{ payload }}'"
+
 [tasks.clean]
 description = "Remove colcon build/install/log artifacts"
 cmd = "rm -rf build install log"
