@@ -49,3 +49,63 @@
   ros_type_name: "sensor_msgs/msg/Imu"
   gz_type_name: "gz.msgs.IMU"
   direction: GZ_TO_ROS
+# ─── Excavation bucket ───────────────────────────────────────────────────────
+# Absolute joint angles in radians, consumed by the two
+# gz::sim::systems::JointPositionController instances declared in
+# perseus_description/urdf/bucket.urdf.xacro. The bucket joints are not
+# ros2_control joints (the real robot drives them over CAN, not through
+# controller_manager), so this is how the simulated bucket is commanded:
+#   ros2 topic pub /bucket/lift/cmd_pos std_msgs/msg/Float64 "{data: -0.4}"
+#   ros2 topic pub /bucket/tilt/cmd_pos std_msgs/msg/Float64 "{data: 0.8}"
+# Their positions come back on /joint_states via the `joint_state` entry above.
+- ros_topic_name: "/bucket/lift/cmd_pos"
+  gz_topic_name: "/bucket/lift/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/tilt/cmd_pos"
+  gz_topic_name: "/bucket/tilt/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/jaw/cmd_pos"
+  gz_topic_name: "/bucket/jaw/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+# Ram followers. bucket_ram_follower solves the ram angle and extension in
+# closed form from the lift/tilt joint angles and publishes them here; the
+# Gazebo position controllers in bucket.urdf.xacro consume them. Both lift rams
+# listen on the same pair, so four numbers drive all six ram joints.
+- ros_topic_name: "/bucket/ram_lift/cmd_angle"
+  gz_topic_name: "/bucket/ram_lift/cmd_angle"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/ram_lift/cmd_extend"
+  gz_topic_name: "/bucket/ram_lift/cmd_extend"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/ram_tilt/cmd_angle"
+  gz_topic_name: "/bucket/ram_tilt/cmd_angle"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/ram_tilt/cmd_extend"
+  gz_topic_name: "/bucket/ram_tilt/cmd_extend"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+# Jaw rams (the two 50 mm jaw actuators). Same follower, same scheme: one angle and
+# one extension drive both sides.
+- ros_topic_name: "/bucket/ram_jaw/cmd_angle"
+  gz_topic_name: "/bucket/ram_jaw/cmd_angle"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/ram_jaw/cmd_extend"
+  gz_topic_name: "/bucket/ram_jaw/cmd_extend"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
