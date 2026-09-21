@@ -3,6 +3,8 @@
   <xacro:arg name="prefix" default="" />
   <xacro:arg name="can_bus" default="can0" />
   <xacro:arg name="hardware_plugin" default="perseus_hardware/VescSystemHardware" />
+  <!-- Attach the excavation bucket. Off by default; perseus_sim.launch.py turns it on. -->
+  <xacro:arg name="use_bucket" default="false" />
 
   <!-- Import URDF description -->
   <xacro:include filename="$(find perseus_description)/urdf/perseus.urdf.xacro" />

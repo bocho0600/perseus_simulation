@@ -1,0 +1,1499 @@
+<?xml version="1.0" ?>
+<robot name="bucket">
+  <link name="Frame_Repaired_1">
+    <visual name="Frame_Repaired_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Frame_Repaired_1.stl"/>
+      </geometry>
+      <material name="Frame_Repaired_1-material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Frame_Repaired_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Frame_Repaired_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.00259372 0.25570765 0.03804597" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1">
+    <visual name="Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1-material">
+        <color rgba="1 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.009 0.01 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1">
+    <visual name="Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1-material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.009 0.01 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1">
+    <visual name="Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1-material">
+        <color rgba="1 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.009 0.01 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1">
+    <visual name="Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1-material">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.009 0.01 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="250mm_Actuator_1_Base_Actuator_v6_1">
+    <visual name="250mm_Actuator_1_Base_Actuator_v6_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_1_Base_Actuator_v6_1.stl"/>
+      </geometry>
+      <material name="250mm_Actuator_1_Base_Actuator_v6_1-material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="250mm_Actuator_1_Base_Actuator_v6_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_1_Base_Actuator_v6_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.056 0.011 -0.0292" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1">
+    <visual name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1-material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4">
+    <visual name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4-material">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="250mm_Actuator_2_Base_Actuator_v6_1">
+    <visual name="250mm_Actuator_2_Base_Actuator_v6_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_2_Base_Actuator_v6_1.stl"/>
+      </geometry>
+      <material name="250mm_Actuator_2_Base_Actuator_v6_1-material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="250mm_Actuator_2_Base_Actuator_v6_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_2_Base_Actuator_v6_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.056 -0.011 0.0108" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1">
+    <visual name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1-material">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4">
+    <visual name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4-material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Left_Arm_-_Square_Tube_2">
+    <visual name="Left_Arm_-_Square_Tube_2_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Left_Arm_-_Square_Tube_2.stl"/>
+      </geometry>
+      <material name="Left_Arm_-_Square_Tube_2-material">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Left_Arm_-_Square_Tube_2_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Left_Arm_-_Square_Tube_2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0.945 -0.007 0.3138754" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_1">
+    <visual name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_1-material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_4">
+    <visual name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_4_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_4-material">
+        <color rgba="1 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_4_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Left_Arm_-_Square_Tube_1">
+    <visual name="Left_Arm_-_Square_Tube_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Left_Arm_-_Square_Tube_1.stl"/>
+      </geometry>
+      <material name="Left_Arm_-_Square_Tube_1-material">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Left_Arm_-_Square_Tube_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Left_Arm_-_Square_Tube_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0.945 -0.007 0.3138754" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_1">
+    <visual name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_1-material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_4">
+    <visual name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_4_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_4-material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_4_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="250mm_Actuator_1_Shaft_v7_1">
+    <visual name="250mm_Actuator_1_Shaft_v7_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_1_Shaft_v7_1.stl"/>
+      </geometry>
+      <material name="250mm_Actuator_1_Shaft_v7_1-material">
+        <color rgba="1 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="250mm_Actuator_1_Shaft_v7_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_1_Shaft_v7_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.02 -0.056 -0.067" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2">
+    <visual name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2-material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3">
+    <visual name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3-material">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="250mm_Actuator_2_Shaft_v7_1">
+    <visual name="250mm_Actuator_2_Shaft_v7_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_2_Shaft_v7_1.stl"/>
+      </geometry>
+      <material name="250mm_Actuator_2_Shaft_v7_1-material">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="250mm_Actuator_2_Shaft_v7_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_2_Shaft_v7_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.02 -0.056 -0.067" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2">
+    <visual name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2-material">
+        <color rgba="1 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3">
+    <visual name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3-material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1-material">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.03006023 0.04173639 0.077" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Actuator_Bracket_1">
+    <visual name="Actuator_Bracket_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Actuator_Bracket_1.stl"/>
+      </geometry>
+      <material name="Actuator_Bracket_1-material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Actuator_Bracket_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Actuator_Bracket_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 -0.01645 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Acutator_on_Arm_Mount_1">
+    <visual name="Acutator_on_Arm_Mount_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Acutator_on_Arm_Mount_1.stl"/>
+      </geometry>
+      <material name="Acutator_on_Arm_Mount_1-material">
+        <color rgba="1 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Acutator_on_Arm_Mount_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Acutator_on_Arm_Mount_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.02385 -0.1 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_2">
+    <visual name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_2_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_2-material">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_2_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_3">
+    <visual name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_3_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_3-material">
+        <color rgba="1 0.5 0 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_3_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1-material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0.04173639 -0.03006023 -0.075" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Actuator_Bracket_2">
+    <visual name="Actuator_Bracket_2_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Actuator_Bracket_2.stl"/>
+      </geometry>
+      <material name="Actuator_Bracket_2-material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Actuator_Bracket_2_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Actuator_Bracket_2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 -0.01645 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_2">
+    <visual name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_2_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_2-material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_2_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_3">
+    <visual name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_3_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+      <material name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_3-material">
+        <color rgba="1 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_3_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Bucket_REAR_Frame_1">
+    <visual name="Bucket_1_Bucket_REAR_Frame_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Bucket_REAR_Frame_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_Bucket_REAR_Frame_1-material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Bucket_REAR_Frame_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Bucket_REAR_Frame_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0.0775 0.021 0.168" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1-material">
+        <color rgba="1 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4-material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Acutator_on_Arm_Mount_3">
+    <visual name="Acutator_on_Arm_Mount_3_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Acutator_on_Arm_Mount_3.stl"/>
+      </geometry>
+      <material name="Acutator_on_Arm_Mount_3-material">
+        <color rgba="1 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="Acutator_on_Arm_Mount_3_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Acutator_on_Arm_Mount_3.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0.02385 0.1 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1-material">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4-material">
+        <color rgba="1 0 0.5 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Bucket_FRONT_Frame_1">
+    <visual name="Bucket_1_Bucket_FRONT_Frame_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Bucket_FRONT_Frame_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_Bucket_FRONT_Frame_1-material">
+        <color rgba="1 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Bucket_FRONT_Frame_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Bucket_FRONT_Frame_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.5598836"/>
+      <inertia ixx="0.058649966" iyy="0.055015799" izz="0.011947834" ixy="0.0027950507" ixz="0" iyz="0"/>
+      <origin xyz="0.044485504 -0.14862943 0.2265" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_50mm_Actuator_v4_1_1_Base_Actuator_v2_1">
+    <visual name="Bucket_1_50mm_Actuator_v4_1_1_Base_Actuator_v2_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_50mm_Actuator_v4_1_1_Base_Actuator_v2_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_50mm_Actuator_v4_1_1_Base_Actuator_v2_1-material">
+        <color rgba="1 0.5 0 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_50mm_Actuator_v4_1_1_Base_Actuator_v2_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_50mm_Actuator_v4_1_1_Base_Actuator_v2_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.056 0.011 0.00287403" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_50mm_Actuator_v4_1_2_Base_Actuator_v2_1">
+    <visual name="Bucket_1_50mm_Actuator_v4_1_2_Base_Actuator_v2_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_50mm_Actuator_v4_1_2_Base_Actuator_v2_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_50mm_Actuator_v4_1_2_Base_Actuator_v2_1-material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_50mm_Actuator_v4_1_2_Base_Actuator_v2_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_50mm_Actuator_v4_1_2_Base_Actuator_v2_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.056 -0.011 0.0108" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_BucketClipVslotMount_1">
+    <visual name="Bucket_1_BucketClipVslotMount_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_BucketClipVslotMount_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_BucketClipVslotMount_1-material">
+        <color rgba="1 0 0.5 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_BucketClipVslotMount_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_BucketClipVslotMount_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0.0405 -0.00431957 0.00606261" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2-material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3-material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Actuator_Bracket_4">
+    <visual name="Actuator_Bracket_4_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Actuator_Bracket_4.stl"/>
+      </geometry>
+      <material name="Actuator_Bracket_4-material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="Actuator_Bracket_4_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Actuator_Bracket_4.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 -0.01645 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2-material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3">
+    <visual name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+      <material name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3-material">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_50mm_Actuator_v4_1_1_Shaft_v2_1">
+    <visual name="Bucket_1_50mm_Actuator_v4_1_1_Shaft_v2_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_50mm_Actuator_v4_1_1_Shaft_v2_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_50mm_Actuator_v4_1_1_Shaft_v2_1-material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_50mm_Actuator_v4_1_1_Shaft_v2_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_50mm_Actuator_v4_1_1_Shaft_v2_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0.077 0.02012597" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_50mm_Actuator_v4_1_2_Shaft_v2_1">
+    <visual name="Bucket_1_50mm_Actuator_v4_1_2_Shaft_v2_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_50mm_Actuator_v4_1_2_Shaft_v2_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_50mm_Actuator_v4_1_2_Shaft_v2_1-material">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_50mm_Actuator_v4_1_2_Shaft_v2_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_50mm_Actuator_v4_1_2_Shaft_v2_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 -0.077 0.02012597" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="250mm_Actuator_3_Shaft_v7_1">
+    <visual name="250mm_Actuator_3_Shaft_v7_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_3_Shaft_v7_1.stl"/>
+      </geometry>
+      <material name="250mm_Actuator_3_Shaft_v7_1-material">
+        <color rgba="1 0.5 0 1"/>
+      </material>
+    </visual>
+    <collision name="250mm_Actuator_3_Shaft_v7_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_3_Shaft_v7_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.056 -0.344 -0.03012597" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_6mm_Bearing_v1_1">
+    <visual name="Bucket_1_6mm_Bearing_v1_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+      <material name="Bucket_1_6mm_Bearing_v1_1-material">
+        <color rgba="1 0 0.5 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_6mm_Bearing_v1_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_6mm_Bearing_v1_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="Bucket_1_6mm_Bearing_v1_2">
+    <visual name="Bucket_1_6mm_Bearing_v1_2_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+      <material name="Bucket_1_6mm_Bearing_v1_2-material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision name="Bucket_1_6mm_Bearing_v1_2_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Bucket_1_6mm_Bearing_v1_2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0.003" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <link name="250mm_Actuator_3_Base_Actuator_v6_1">
+    <visual name="250mm_Actuator_3_Base_Actuator_v6_1_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_3_Base_Actuator_v6_1.stl"/>
+      </geometry>
+      <material name="250mm_Actuator_3_Base_Actuator_v6_1-material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision name="250mm_Actuator_3_Base_Actuator_v6_1_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/250mm_Actuator_3_Base_Actuator_v6_1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0.011 0.056 -0.00987597" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <joint name="Fastened_1" type="fixed">
+    <origin xyz="0.01740628 0.60670765 -0.00695403" rpy="1.5707963 0 -1.5707963"/>
+    <parent link="Frame_Repaired_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1"/>
+  </joint>
+  <joint name="Fastened_1-1" type="fixed">
+    <origin xyz="0.01740628 0.40670765 -0.00695403" rpy="1.5707963 0 -1.5707963"/>
+    <parent link="Frame_Repaired_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1"/>
+  </joint>
+  <joint name="Fastened_1-2" type="fixed">
+    <origin xyz="0.01740628 0.40670765 0.23304597" rpy="1.5707963 0 -1.5707963"/>
+    <parent link="Frame_Repaired_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1"/>
+  </joint>
+  <joint name="Fastened_1-3" type="fixed">
+    <origin xyz="0.01740628 0.60670765 0.23304597" rpy="1.5707963 0 -1.5707963"/>
+    <parent link="Frame_Repaired_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1"/>
+  </joint>
+  <joint name="Revolute_5" type="revolute">
+    <origin xyz="0.03667597 -0.02006023 -0.04173639" rpy="-1.5707963 0 1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1"/>
+    <child link="250mm_Actuator_1_Base_Actuator_v6_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Fastened_2" type="fixed">
+    <origin xyz="0.071 -0.02006023 -0.04173639" rpy="-1.5707963 0 -1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1"/>
+  </joint>
+  <joint name="Fastened_2-1" type="fixed">
+    <origin xyz="0.021 -0.02006023 -0.04173639" rpy="1.5707963 0 -1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4"/>
+  </joint>
+  <joint name="Revolute_7" type="revolute">
+    <origin xyz="0.05532403 -0.02006023 -0.04173639" rpy="1.5707963 0 1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1"/>
+    <child link="250mm_Actuator_2_Base_Actuator_v6_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Fastened_2-2" type="fixed">
+    <origin xyz="0.071 -0.02006023 -0.04173639" rpy="-1.5707963 0 -1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1"/>
+  </joint>
+  <joint name="Fastened_2-3" type="fixed">
+    <origin xyz="0.021 -0.02006023 -0.04173639" rpy="1.5707963 0 -1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4"/>
+  </joint>
+  <joint name="Revolute_1" type="revolute">
+    <origin xyz="0.066 -0.02006023 -0.04173639" rpy="-0 1.5707963 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1"/>
+    <child link="Left_Arm_-_Square_Tube_2"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Fastened_2-4" type="fixed">
+    <origin xyz="0.071 -0.02006023 -0.04173639" rpy="-1.5707963 0 -1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_1"/>
+  </joint>
+  <joint name="Fastened_2-5" type="fixed">
+    <origin xyz="0.021 -0.02006023 -0.04173639" rpy="1.5707963 0 -1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_3_Main_Bearing_Block_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_4"/>
+  </joint>
+  <joint name="Revolute_1-1" type="revolute">
+    <origin xyz="0.066 -0.02006023 -0.04173639" rpy="-0 1.5707963 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1"/>
+    <child link="Left_Arm_-_Square_Tube_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Fastened_2-6" type="fixed">
+    <origin xyz="0.071 -0.02006023 -0.04173639" rpy="-1.5707963 0 -1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_1"/>
+  </joint>
+  <joint name="Fastened_2-7" type="fixed">
+    <origin xyz="0.021 -0.02006023 -0.04173639" rpy="1.5707963 0 -1.5707963"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_4_Main_Bearing_Block_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_4"/>
+  </joint>
+  <joint name="Slider_1" type="prismatic">
+    <origin xyz="0 0.338 -0.0092" rpy="-1.5707963 -1.5707963 0"/>
+    <parent link="250mm_Actuator_1_Base_Actuator_v6_1"/>
+    <child link="250mm_Actuator_1_Shaft_v7_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-0.25" upper="-0"/>
+  </joint>
+  <joint name="Fastened_1-4" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2"/>
+  </joint>
+  <joint name="Fastened_1-5" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4"/>
+    <child link="Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3"/>
+  </joint>
+  <joint name="Slider_1-1" type="prismatic">
+    <origin xyz="0 -0.338 -0.0092" rpy="1.5707963 1.5707963 0"/>
+    <parent link="250mm_Actuator_2_Base_Actuator_v6_1"/>
+    <child link="250mm_Actuator_2_Shaft_v7_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-0.25" upper="-0"/>
+  </joint>
+  <joint name="Fastened_1-6" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2"/>
+  </joint>
+  <joint name="Fastened_1-7" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4"/>
+    <child link="Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3"/>
+  </joint>
+  <joint name="Revolute_2" type="revolute">
+    <origin xyz="0.7 0 0.002" rpy="3.1415927 0 1.5707963"/>
+    <parent link="Left_Arm_-_Square_Tube_2"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Fastened_2-8" type="fixed">
+    <origin xyz="0.597 -0.01 -0.02" rpy="-1.5707963 -1.5707963 0"/>
+    <parent link="Left_Arm_-_Square_Tube_2"/>
+    <child link="Actuator_Bracket_1"/>
+  </joint>
+  <joint name="Fastened_5" type="fixed">
+    <origin xyz="0.2267 0.01 -0.02" rpy="1.5707963 0 0"/>
+    <parent link="Left_Arm_-_Square_Tube_2"/>
+    <child link="Acutator_on_Arm_Mount_1"/>
+  </joint>
+  <joint name="Fastened_1-8" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_2"/>
+  </joint>
+  <joint name="Fastened_1-9" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_4"/>
+    <child link="Main_Bucket_Mount_Plate_v8_3_6mm_Bearing_v1_3"/>
+  </joint>
+  <joint name="Revolute_3" type="revolute">
+    <origin xyz="0.7 0 0" rpy="0 0 0"/>
+    <parent link="Left_Arm_-_Square_Tube_1"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Fastened_2-9" type="fixed">
+    <origin xyz="0.597 -0.01 -0.02" rpy="-1.5707963 -1.5707963 0"/>
+    <parent link="Left_Arm_-_Square_Tube_1"/>
+    <child link="Actuator_Bracket_2"/>
+  </joint>
+  <joint name="Fastened_1-10" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_1"/>
+    <child link="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_2"/>
+  </joint>
+  <joint name="Fastened_1-11" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_4"/>
+    <child link="Main_Bucket_Mount_Plate_v8_4_6mm_Bearing_v1_3"/>
+  </joint>
+  <joint name="Fastened_1-12" type="fixed">
+    <origin xyz="-0.02006023 0.04173639 -0.024" rpy="-1.5707963 1.5707963 0"/>
+    <parent link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1"/>
+    <child link="Bucket_1_Bucket_REAR_Frame_1"/>
+  </joint>
+  <joint name="Fastened_2-10" type="fixed">
+    <origin xyz="0 0 -0.003" rpy="3.1415927 0 0"/>
+    <parent link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1"/>
+  </joint>
+  <joint name="Fastened_2-11" type="fixed">
+    <origin xyz="0 0 0.047" rpy="0 0 0"/>
+    <parent link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_Main_Bearing_Block_1"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4"/>
+  </joint>
+  <joint name="Revolute_6" type="revolute">
+    <origin xyz="0.01025 -0.037 -0.03455" rpy="0 -1.5707963 0"/>
+    <parent link="Actuator_Bracket_1"/>
+    <child link="250mm_Actuator_2_Shaft_v7_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Fastened_3" type="fixed">
+    <origin xyz="-0.0477 0 -0.002" rpy="3.1415927 0 0"/>
+    <parent link="Acutator_on_Arm_Mount_1"/>
+    <child link="Acutator_on_Arm_Mount_3"/>
+  </joint>
+  <joint name="Fastened_2-12" type="fixed">
+    <origin xyz="0 0 0.005" rpy="0 0 1.5707963"/>
+    <parent link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1"/>
+  </joint>
+  <joint name="Fastened_2-13" type="fixed">
+    <origin xyz="0 0 -0.045" rpy="3.1415927 0 1.5707963"/>
+    <parent link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4"/>
+  </joint>
+  <joint name="Revolute_4" type="revolute">
+    <origin xyz="-0.01025 -0.037 -0.03455" rpy="0 -1.5707963 0"/>
+    <parent link="Actuator_Bracket_2"/>
+    <child link="250mm_Actuator_1_Shaft_v7_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Revolute_1-2" type="revolute">
+    <origin xyz="-0.3725 -0.179 0.03471381" rpy="3.1415927 -1.5707963 0"/>
+    <parent link="Bucket_1_Bucket_REAR_Frame_1"/>
+    <child link="Bucket_1_Bucket_FRONT_Frame_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Revolute_3-1" type="revolute">
+    <origin xyz="0.0345 0.012 -0.032" rpy="3.1415927 -1.5707963 0"/>
+    <parent link="Bucket_1_Bucket_REAR_Frame_1"/>
+    <child link="Bucket_1_50mm_Actuator_v4_1_1_Base_Actuator_v2_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Revolute_6-1" type="revolute">
+    <origin xyz="-0.35857403 0.012 -0.032" rpy="0 -1.5707963 0"/>
+    <parent link="Bucket_1_Bucket_REAR_Frame_1"/>
+    <child link="Bucket_1_50mm_Actuator_v4_1_2_Base_Actuator_v2_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Fastened_2-14" type="fixed">
+    <origin xyz="-0.1625 -0.107 0" rpy="0 0 0"/>
+    <parent link="Bucket_1_Bucket_REAR_Frame_1"/>
+    <child link="Bucket_1_BucketClipVslotMount_1"/>
+  </joint>
+  <joint name="Fastened_1-13" type="fixed">
+    <origin xyz="-0.2 0 0" rpy="0 0 0"/>
+    <parent link="Bucket_1_Bucket_REAR_Frame_1"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_Main_Bearing_Block_1"/>
+  </joint>
+  <joint name="Fastened_1-14" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_1"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_2"/>
+  </joint>
+  <joint name="Fastened_1-15" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_4"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_1_6mm_Bearing_v1_3"/>
+  </joint>
+  <joint name="Fastened_4" type="fixed">
+    <origin xyz="0.0077 0.1 0.002" rpy="3.1415927 0 -1.5707963"/>
+    <parent link="Acutator_on_Arm_Mount_3"/>
+    <child link="Actuator_Bracket_4"/>
+  </joint>
+  <joint name="Fastened_1-16" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_1"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_2"/>
+  </joint>
+  <joint name="Fastened_1-17" type="fixed">
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+    <parent link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_4"/>
+    <child link="Bucket_1_Main_Bucket_Mount_Plate_v8_2_6mm_Bearing_v1_3"/>
+  </joint>
+  <joint name="Revolute_4-1" type="revolute">
+    <origin xyz="-0.06104917 0.01573582 0.45" rpy="3.1415927 0 0"/>
+    <parent link="Bucket_1_Bucket_FRONT_Frame_1"/>
+    <child link="Bucket_1_50mm_Actuator_v4_1_1_Shaft_v2_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Revolute_5-1" type="revolute">
+    <origin xyz="-0.06104917 0.01573582 0.003" rpy="0 0 0"/>
+    <parent link="Bucket_1_Bucket_FRONT_Frame_1"/>
+    <child link="Bucket_1_50mm_Actuator_v4_1_2_Shaft_v2_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Slider_1-2" type="prismatic">
+    <origin xyz="0 0.138 0.02287403" rpy="-1.5707963 0 -3.1415927"/>
+    <parent link="Bucket_1_50mm_Actuator_v4_1_1_Base_Actuator_v2_1"/>
+    <child link="Bucket_1_50mm_Actuator_v4_1_1_Shaft_v2_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-0.25" upper="-0"/>
+  </joint>
+  <joint name="Slider_1-3" type="prismatic">
+    <origin xyz="0 -0.138 -0.0092" rpy="1.5707963 0 3.1415927"/>
+    <parent link="Bucket_1_50mm_Actuator_v4_1_2_Base_Actuator_v2_1"/>
+    <child link="Bucket_1_50mm_Actuator_v4_1_2_Shaft_v2_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-0.25" upper="-0"/>
+  </joint>
+  <joint name="Revolute_9" type="revolute">
+    <origin xyz="0.0265 -0.03636572 0.00267373" rpy="1.5707963 0 1.5707963"/>
+    <parent link="Bucket_1_BucketClipVslotMount_1"/>
+    <child link="250mm_Actuator_3_Shaft_v7_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Fastened_3-1" type="fixed">
+    <origin xyz="0.0285 -0.03636572 0.00267373" rpy="-0 1.5707963 0"/>
+    <parent link="Bucket_1_BucketClipVslotMount_1"/>
+    <child link="Bucket_1_6mm_Bearing_v1_1"/>
+  </joint>
+  <joint name="Fastened_3-2" type="fixed">
+    <origin xyz="0.0045 -0.03636572 0.00267373" rpy="3.1415927 1.5707963 0"/>
+    <parent link="Bucket_1_BucketClipVslotMount_1"/>
+    <child link="Bucket_1_6mm_Bearing_v1_2"/>
+  </joint>
+  <joint name="Revolute_8" type="revolute">
+    <origin xyz="-0.01025 -0.037 -0.03455" rpy="-1.5707963 0 -1.5707963"/>
+    <parent link="Actuator_Bracket_4"/>
+    <child link="250mm_Actuator_3_Base_Actuator_v6_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-6.2831853" upper="6.2831853"/>
+  </joint>
+  <joint name="Slider_1-4" type="prismatic">
+    <origin xyz="0 -0.277 -0.01012597" rpy="-1.5707963 -1.5707963 0"/>
+    <parent link="250mm_Actuator_3_Shaft_v7_1"/>
+    <child link="250mm_Actuator_3_Base_Actuator_v6_1"/>
+    <axis xyz="0 0 -1"/>
+    <limit effort="1" velocity="1" lower="-0.25" upper="-0"/>
+  </joint>
+</robot>

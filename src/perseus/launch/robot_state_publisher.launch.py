@@ -16,6 +16,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration("use_sim_time", default=False)
     hardware_plugin = LaunchConfiguration("hardware_plugin")
     can_bus = LaunchConfiguration("can_bus", default="")
+    use_bucket = LaunchConfiguration("use_bucket", default="false")
 
     # XACRO FILES
     robot_description_xacro = PathJoinSubstitution(
@@ -33,6 +34,8 @@ def generate_launch_description():
                 hardware_plugin,
                 " can_bus:=",
                 can_bus,
+                " use_bucket:=",
+                use_bucket,
             ]
         ),
         value_type=str,
