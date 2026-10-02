@@ -87,6 +87,8 @@ ros-jazzy-controller-manager = "*"
 ros-jazzy-diff-drive-controller = "*"
 ros-jazzy-mecanum-drive-controller = "*"
 ros-jazzy-joint-state-broadcaster = "*"
+# bucket controllers (perseus_simulation/config/bucket_controllers.yaml)
+ros-jazzy-joint-trajectory-controller = "*"
 ros-jazzy-robot-state-publisher = "*"
 ros-jazzy-xacro = "*"
 

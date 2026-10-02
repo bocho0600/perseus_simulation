@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!--
+    ros2_control block for the bucket's three driven joints (see
+    urdf/bucket.urdf.xacro, a copy of perseus-v3's). Mirrors perseus-v3's
+    description/ros2_control/bucket.ros2_control.xacro: same joints, same
+    interfaces, so the controllers in perseus_simulation/config/
+    bucket_controllers.yaml are the ones the real robot runs.
+
+    The differences are the hardware: in Gazebo the joints are driven by
+    gz_ros2_control's GazeboSimSystem, and anywhere else by
+    mock_components/GenericSystem, not BucketHardware over CAN. So there are no
+    can_interface, axis, side, offset_deg or direction params.
+
+    The single gz_ros2_control plugin in perseus.ros2_control.xacro picks this
+    block up alongside the drive's, so the bucket shares the drive's
+    controller_manager here. perseus_sim.launch.py spawns the bucket controller
+    into the `payloads` namespace, so its action has the same name as on the
+    real robot.
+  -->
+  <xacro:macro name="bucket_ros2_control" params="prefix:='' hardware_plugin">
+    <xacro:property name="bucket_plugin"
+        value="${hardware_plugin if hardware_plugin == 'gz_ros2_control/GazeboSimSystem' else 'mock_components/GenericSystem'}"/>
+    <ros2_control name="BucketSystem" type="system">
+      <hardware>
+        <plugin>${bucket_plugin}</plugin>
+      </hardware>
+
+      <xacro:macro name="bucket_ros2_control_joint" params="joint">
+        <joint name="${prefix}${joint}">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+          <state_interface name="effort"/>
+        </joint>
+      </xacro:macro>
+      <xacro:bucket_ros2_control_joint joint="bucket_lift_joint"/>
+      <xacro:bucket_ros2_control_joint joint="bucket_tilt_joint"/>
+      <xacro:bucket_ros2_control_joint joint="bucket_jaw_joint"/>
+    </ros2_control>
+  </xacro:macro>
+</robot>

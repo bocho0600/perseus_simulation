@@ -8,6 +8,7 @@ from launch.conditions import IfCondition
 from launch.substitutions import (
     PathJoinSubstitution,
     LaunchConfiguration,
+    PythonExpression,
 )
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
@@ -22,6 +23,8 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration("use_sim_time")
     launch_ekf = LaunchConfiguration("launch_ekf")
     payload = LaunchConfiguration("payload")
+    bucket_controller = LaunchConfiguration("bucket_controller")
+    is_bucket = PythonExpression(["'", payload, "' == 'bucket'"])
 
     arguments = [
         DeclareLaunchArgument(
@@ -38,6 +41,23 @@ def generate_launch_description():
             "payload",
             default_value="bucket",
             description="Which payload to attach to the rover; 'none' for the bare rover",
+        ),
+        # Same choices and default as perseus-v3's perseus.launch.py.
+        DeclareLaunchArgument(
+            "bucket_controller",
+            default_value="bucket_trajectory_controller",
+            choices=[
+                "none",
+                "bucket_trajectory_controller",
+                "bucket_lift_controller",
+                "bucket_tilt_controller",
+                "bucket_jaw_controller",
+            ],
+            description=(
+                "payload:=bucket only. ros2_control controller that commands the "
+                "bucket, spawned into the payloads namespace as on the real robot. "
+                "'none' spawns nothing and leaves the bucket joints uncommanded"
+            ),
         ),
     ]
     # IMPORTED LAUNCH FILES
@@ -97,9 +117,46 @@ def generate_launch_description():
     # conservative fallback for slower first runs or heavier worlds; if startup
     # sequencing changes, this is the place to tune or replace with an event-
     # driven trigger.
+    # The bucket shares the drive's controller_manager (gz_ros2_control runs one
+    # per model), but its controller is put in the payloads namespace so the
+    # action is /payloads/<controller>/follow_joint_trajectory, as on the real
+    # robot. Its parameters come from bucket_controllers.yaml via the plugin.
+    bucket_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            bucket_controller,
+            "--controller-ros-args",
+            "-r __ns:=/payloads",
+        ],
+        parameters=[{"use_sim_time": use_sim_time}],
+        condition=IfCondition(
+            PythonExpression(
+                [
+                    "'",
+                    payload,
+                    "' == 'bucket' and '",
+                    bucket_controller,
+                    "' != 'none'",
+                ]
+            )
+        ),
+    )
     controllers_launch_delayed = TimerAction(
         period=10.0,
-        actions=[controllers_launch],
+        actions=[controllers_launch, bucket_controller_spawner],
+    )
+    # Drives the bucket's rams so they track the linkage. Cosmetic: the rams
+    # carry no mass or collision, so the sim is correct without it - they just
+    # hold their pose. See perseus_description/scripts/bucket_ram_follower.py for
+    # why Gazebo cannot do this itself.
+    bucket_ram_follower = Node(
+        package="perseus_description",
+        executable="bucket_ram_follower.py",
+        name="bucket_ram_follower",
+        parameters=[{"use_sim_time": use_sim_time}],
+        output="both",
+        condition=IfCondition(is_bucket),
     )
     rviz_config = PathJoinSubstitution(
         [FindPackageShare("perseus_simulation"), "rviz", "view.rviz"]
@@ -173,6 +230,7 @@ def generate_launch_description():
         ekf_delayed,
         rosbridge_launch,
         twist_mux_launch,
+        bucket_ram_follower,
         # rviz,
     ]
 

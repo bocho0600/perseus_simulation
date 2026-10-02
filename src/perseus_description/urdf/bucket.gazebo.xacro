@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!--
+    Gazebo-only additions to the bucket in bucket.urdf.xacro. They live here so
+    bucket.urdf.xacro stays a straight copy of perseus-v3's (only the mesh path
+    differs), which leaves out every <gazebo> block bar the rams' gravity flags.
+
+    The three driven joints (bucket_lift_joint, bucket_tilt_joint,
+    bucket_jaw_joint) are not driven from here. They are ros2_control joints
+    (ros2_control/bucket.ros2_control.xacro), commanded by the controllers in
+    perseus_simulation/config/bucket_controllers.yaml, and joint_state_broadcaster
+    reports them.
+
+    The ten ram joints are not free: each is a function of lift, tilt and jaw,
+    and nothing in Gazebo can enforce that (dartsim refuses closed loops and does
+    not enforce <mimic>). bucket_ram_follower (scripts/bucket_ram_follower.py)
+    solves them in closed form and publishes the targets on /bucket/ram_*/cmd_*,
+    bridged in perseus_simulation/config/gz_bridge.yaml; the position
+    controllers below consume them. Both lift rams listen on the same pair of
+    topics, as do both jaw rams, so six numbers drive all ten joints.
+  -->
+  <xacro:macro name="bucket_gazebo" params="prefix:=^">
+    <gazebo>
+      <!--
+        joint_state_broadcaster only reports the ros2_control joints, so without
+        this the rams never reach robot_state_publisher and sit frozen at zero in
+        RViz however they move in Gazebo. The topic is bridged to /joint_states.
+      -->
+      <plugin filename="gz-sim-joint-state-publisher-system"
+              name="gz::sim::systems::JointStatePublisher">
+        <topic>joint_state</topic>
+        <joint_name>${prefix}bucket_ram_lift_left_pitch_joint</joint_name>
+        <joint_name>${prefix}bucket_ram_lift_left_extend_joint</joint_name>
+        <joint_name>${prefix}bucket_ram_lift_right_pitch_joint</joint_name>
+        <joint_name>${prefix}bucket_ram_lift_right_extend_joint</joint_name>
+        <joint_name>${prefix}bucket_ram_tilt_pitch_joint</joint_name>
+        <joint_name>${prefix}bucket_ram_tilt_extend_joint</joint_name>
+        <joint_name>${prefix}bucket_ram_jaw_right_pitch_joint</joint_name>
+        <joint_name>${prefix}bucket_ram_jaw_right_extend_joint</joint_name>
+        <joint_name>${prefix}bucket_ram_jaw_left_pitch_joint</joint_name>
+        <joint_name>${prefix}bucket_ram_jaw_left_extend_joint</joint_name>
+      </plugin>
+
+      <!--
+        The ram links are near-massless with gravity off, so the gains only have
+        to overcome joint damping. Keeping them low avoids adding a stiff,
+        pointless mode to the solver.
+      -->
+      <xacro:macro name="bucket_ram_follower" params="joint topic kind">
+        <plugin filename="gz-sim-joint-position-controller-system"
+                name="gz::sim::systems::JointPositionController">
+          <joint_name>${prefix}${joint}</joint_name>
+          <topic>${topic}</topic>
+          <xacro:if value="${kind == 'pitch'}">
+            <p_gain>20</p_gain><i_gain>2</i_gain><d_gain>2</d_gain>
+          </xacro:if>
+          <!-- The jaw-ram barrel plus rod is only ~5e-4 kg.m2 about its pin, so
+               the gains above are far too stiff for it: d/I * dt = 4 at a 1 ms
+               step, past the explicit-integration limit of 2, and the joint
+               limit-cycles instead of settling. These give a natural frequency of
+               ~30 rad/s and a damping ratio of ~0.6, with d/I * dt = 0.04. -->
+          <xacro:if value="${kind == 'jawpitch'}">
+            <p_gain>0.5</p_gain><i_gain>0.05</i_gain><d_gain>0.02</d_gain>
+          </xacro:if>
+          <xacro:if value="${kind == 'extend'}">
+            <p_gain>200</p_gain><i_gain>20</i_gain><d_gain>10</d_gain>
+          </xacro:if>
+          <i_max>5</i_max>
+          <i_min>-5</i_min>
+          <cmd_max>50</cmd_max>
+          <cmd_min>-50</cmd_min>
+          <initial_position>0.0</initial_position>
+        </plugin>
+      </xacro:macro>
+
+      <xacro:bucket_ram_follower joint="bucket_ram_lift_left_pitch_joint"   topic="/bucket/ram_lift/cmd_angle"  kind="pitch"/>
+      <xacro:bucket_ram_follower joint="bucket_ram_lift_right_pitch_joint"  topic="/bucket/ram_lift/cmd_angle"  kind="pitch"/>
+      <xacro:bucket_ram_follower joint="bucket_ram_lift_left_extend_joint"  topic="/bucket/ram_lift/cmd_extend" kind="extend"/>
+      <xacro:bucket_ram_follower joint="bucket_ram_lift_right_extend_joint" topic="/bucket/ram_lift/cmd_extend" kind="extend"/>
+      <xacro:bucket_ram_follower joint="bucket_ram_tilt_pitch_joint"        topic="/bucket/ram_tilt/cmd_angle"  kind="pitch"/>
+      <xacro:bucket_ram_follower joint="bucket_ram_tilt_extend_joint"       topic="/bucket/ram_tilt/cmd_extend" kind="extend"/>
+      <xacro:bucket_ram_follower joint="bucket_ram_jaw_right_pitch_joint"   topic="/bucket/ram_jaw/cmd_angle"   kind="jawpitch"/>
+      <xacro:bucket_ram_follower joint="bucket_ram_jaw_left_pitch_joint"    topic="/bucket/ram_jaw/cmd_angle"   kind="jawpitch"/>
+      <xacro:bucket_ram_follower joint="bucket_ram_jaw_right_extend_joint"  topic="/bucket/ram_jaw/cmd_extend"  kind="extend"/>
+      <xacro:bucket_ram_follower joint="bucket_ram_jaw_left_extend_joint"   topic="/bucket/ram_jaw/cmd_extend"  kind="extend"/>
+    </gazebo>
+
+    <!-- The cutting edge needs grip to bite rather than skate. -->
+    <gazebo reference="${prefix}bucket_body">
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+    </gazebo>
+    <gazebo reference="${prefix}bucket_lift_arm">
+      <mu1>0.6</mu1>
+      <mu2>0.6</mu2>
+    </gazebo>
+  </xacro:macro>
+</robot>

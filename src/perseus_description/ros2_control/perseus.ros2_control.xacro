@@ -35,6 +35,7 @@
             <!-- <remapping>/diff_drive_base_controller/cmd_vel:=/cmd_vel</remapping> -->
           </ros>
           <parameters>$(find perseus)/config/perseus_controllers.yaml</parameters>
+          <parameters>$(find perseus_simulation)/config/bucket_controllers.yaml</parameters>
           <parameters>$(find perseus_simulation)/config/ros2_control_sim.yaml</parameters>
         </plugin>
       </gazebo>

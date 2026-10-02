@@ -734,6 +734,7 @@ environments:
       - conda: https://prefix.dev/robostack-jazzy/linux-64/ros-jazzy-joint-state-broadcaster-4.40.0-np2py312h2ed9cc7_18.conda
       - conda: https://prefix.dev/robostack-jazzy/linux-64/ros-jazzy-joint-state-publisher-2.4.1-np2py312h2ed9cc7_18.conda
       - conda: https://prefix.dev/robostack-jazzy/linux-64/ros-jazzy-joint-state-publisher-gui-2.4.1-np2py312h2ed9cc7_18.conda
+      - conda: https://prefix.dev/robostack-jazzy/linux-64/ros-jazzy-joint-trajectory-controller-4.40.0-np2py312h2ed9cc7_18.conda
       - conda: https://prefix.dev/robostack-jazzy/linux-64/ros-jazzy-joy-3.3.0-np2py312h2ed9cc7_18.conda
       - conda: https://prefix.dev/robostack-jazzy/linux-64/ros-jazzy-kdl-parser-2.11.0-np2py312h2ed9cc7_18.conda
       - conda: https://prefix.dev/robostack-jazzy/linux-64/ros-jazzy-keyboard-handler-0.3.2-np2py312h2ed9cc7_18.conda
@@ -13597,6 +13598,39 @@ packages:
   run_exports: {}
   size: 28961
   timestamp: 1782304695013
+- conda: https://prefix.dev/robostack-jazzy/linux-64/ros-jazzy-joint-trajectory-controller-4.40.0-np2py312h2ed9cc7_18.conda
+  sha256: f44be27a02bab8a87c757419b9ab035ebab28c8fd9f9004b7290ac7d8091c487
+  md5: fe6bf56478d7d0b6da11dc4a4a5aaa85
+  depends:
+  - cpp-expected
+  - python
+  - ros-jazzy-angles
+  - ros-jazzy-backward-ros
+  - ros-jazzy-control-msgs
+  - ros-jazzy-control-toolbox
+  - ros-jazzy-controller-interface
+  - ros-jazzy-generate-parameter-library
+  - ros-jazzy-hardware-interface
+  - ros-jazzy-pluginlib
+  - ros-jazzy-rclcpp
+  - ros-jazzy-rclcpp-action
+  - ros-jazzy-rclcpp-lifecycle
+  - ros-jazzy-realtime-tools
+  - ros-jazzy-ros-workspace
+  - ros-jazzy-rsl
+  - ros-jazzy-trajectory-msgs
+  - ros-jazzy-urdf
+  - ros2-distro-mutex 0.15.* jazzy_*
+  - libgcc >=14
+  - libstdcxx >=14
+  - __glibc >=2.17,<3.0.a0
+  - ros2-distro-mutex >=0.15.0,<0.16.0a0
+  - python_abi 3.12.* *_cp312
+  - numpy >=1.25,<3
+  license: Apache-2.0
+  run_exports: {}
+  size: 463417
+  timestamp: 1782374496933
 - conda: https://prefix.dev/robostack-jazzy/linux-64/ros-jazzy-joy-3.3.0-np2py312h2ed9cc7_18.conda
   sha256: abca001be423af6327433a28b79dc3be1f681f6b6119fb768004d6ef338b314c
   md5: aee45a233dbf36b33ca6f1e3820f243f

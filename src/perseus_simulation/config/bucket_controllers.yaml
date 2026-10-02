@@ -1,0 +1,87 @@
+# Bucket controllers, copied from perseus-v3's payloads/config/bucket_controller.yaml
+# so the simulated bucket answers the same goals as the real one. Keep the two in
+# sync.
+#
+# Differences from the real robot:
+#   * no update_rate: the bucket shares the drive's controller_manager here (one
+#     gz_ros2_control plugin per model), so perseus_controllers.yaml sets the rate;
+#   * the hardware is GazeboSimSystem, not BucketHardware over CAN.
+#
+# The /**/ wildcards are load-bearing: perseus_sim.launch.py spawns the command
+# controller into the `payloads` namespace, as on the real robot, so its node is
+# /payloads/<name> and a plain key would not match it.
+/**/controller_manager:
+  ros__parameters:
+    # joint_state_broadcaster comes from perseus_controllers.yaml and already
+    # reports the bucket joints, since they share its controller_manager.
+    bucket_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    # Single-axis controllers for bring-up: each claims one joint, so the other
+    # two banks receive no SET_POSITION frames.
+    bucket_lift_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    bucket_tilt_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    bucket_jaw_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+/**/bucket_lift_controller:
+  ros__parameters:
+    joints:
+      - bucket_lift_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    # Without these a goal reports SUCCEEDED when its time runs out, even if the
+    # bucket never moved. 0.035 rad = 2 deg.
+    constraints:
+      goal_time: 3.0
+      bucket_lift_joint:
+        goal: 0.035
+/**/bucket_tilt_controller:
+  ros__parameters:
+    joints:
+      - bucket_tilt_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    constraints:
+      goal_time: 3.0
+      bucket_tilt_joint:
+        goal: 0.035
+/**/bucket_jaw_controller:
+  ros__parameters:
+    joints:
+      - bucket_jaw_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    constraints:
+      goal_time: 3.0
+      bucket_jaw_joint:
+        goal: 0.035
+/**/bucket_trajectory_controller:
+  ros__parameters:
+    joints:
+      - bucket_lift_joint
+      - bucket_tilt_joint
+      - bucket_jaw_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_partial_joints_goal: true
+    constraints:
+      goal_time: 3.0
+      bucket_lift_joint:
+        goal: 0.035
+      bucket_tilt_joint:
+        goal: 0.035
+      bucket_jaw_joint:
+        goal: 0.035

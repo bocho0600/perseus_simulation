@@ -103,3 +103,42 @@
   ros_type_name: "sensor_msgs/msg/Imu"
   gz_type_name: "gz.msgs.IMU"
   direction: GZ_TO_ROS
+# ─── Excavation bucket ───────────────────────────────────────────────────────
+# bucket_lift_joint, bucket_tilt_joint and bucket_jaw_joint are ros2_control
+# joints, commanded through the controllers in bucket_controllers.yaml rather
+# than over the bridge.
+#
+# Ram followers. bucket_ram_follower solves each ram's angle and extension in
+# closed form from the lift/tilt/jaw joint angles and publishes them here; the
+# Gazebo position controllers in perseus_description/urdf/bucket.gazebo.xacro
+# consume them. Both lift rams listen on the same pair, as do both jaw rams.
+- ros_topic_name: "/bucket/ram_lift/cmd_angle"
+  gz_topic_name: "/bucket/ram_lift/cmd_angle"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/ram_lift/cmd_extend"
+  gz_topic_name: "/bucket/ram_lift/cmd_extend"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/ram_tilt/cmd_angle"
+  gz_topic_name: "/bucket/ram_tilt/cmd_angle"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/ram_tilt/cmd_extend"
+  gz_topic_name: "/bucket/ram_tilt/cmd_extend"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/ram_jaw/cmd_angle"
+  gz_topic_name: "/bucket/ram_jaw/cmd_angle"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+- ros_topic_name: "/bucket/ram_jaw/cmd_extend"
+  gz_topic_name: "/bucket/ram_jaw/cmd_extend"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
