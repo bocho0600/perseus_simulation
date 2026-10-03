@@ -16,22 +16,30 @@
   </material>
   <sensor name="${prefix}lidar_sensor" type="gpu_lidar">
     <topic>scan_3d</topic>
-    <!-- MID-360 frame rate is 10 Hz typical; 720x32 samples at 10 Hz gives
-         230k points/s, close to the real 200k points/s (first return) -->
+    <!-- MID-360 frame rate is 10 Hz typical. 360x96 samples at 10 Hz gives
+         ~345k points/s, ~1.7x the real 200k points/s (first return), on purpose.
+         gpu_lidar's rings repeat EXACTLY every scan; the real MID-360 is
+         non-repetitive and fills its FOV over time. With the old 720x32 pattern
+         (1.9 deg between rings) a 0.36 m boulder 4 m out caught 1-2 rings, the
+         cells between rings were never observed, and global_traversability (which
+         needs ~3 consecutive obstacle verdicts) left 80% of boulder_3 unmapped -
+         the rover drove into it. Trading horizontal (0.5 -> 1 deg, still 7 cm at
+         4 m) for 3x the rings stands in for the real sensor's accumulated
+         coverage. -->
     <update_rate>10</update_rate>
     <always_on>false</always_on>
     <visualize>false</visualize>
     <ray>
       <scan>
         <horizontal>
-          <samples>720</samples>
+          <samples>360</samples>
           <resolution>1</resolution>
           <min_angle>-3.14159</min_angle>
           <max_angle>3.14159</max_angle>
         </horizontal>
         <!-- Angle Simulating the Livox MID-360 -->
         <vertical> 
-          <samples>32</samples>
+          <samples>96</samples>
           <min_angle>-0.1222</min_angle>     <!-- –7° in radians -->
           <max_angle>0.9076</max_angle>      <!-- +52° in radians -->
         </vertical>
