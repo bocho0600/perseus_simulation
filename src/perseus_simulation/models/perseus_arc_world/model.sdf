@@ -167,6 +167,36 @@
       </visual>
     </link>
 
+    <!--
+      Structural column at the centre of the regolith bed, (0, 4.05), as in the
+      real arena: 0.30 m square, floor to ceiling. It starts at z = -0.35 like
+      the walls, so it reaches below the lowest point of the bed, and it stops
+      at z = 5.5, under the tent's ridge beam (exolith_lab). It sits in the
+      obstacle zone, 1.6 m from the nearest boulder.
+    -->
+    <link name='Center_Column'>
+      <pose>0 4.05 2.575 0 0 0</pose>
+      <collision name='Center_Column_Collision'>
+        <geometry>
+          <box>
+            <size>0.30 0.30 5.85</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='Center_Column_Visual'>
+        <geometry>
+          <box>
+            <size>0.30 0.30 5.85</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.60 0.61 0.62 1</ambient>
+          <diffuse>0.75 0.76 0.78 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+
     <!-- Fixed joints connecting the walls (leave the loop open) -->
     <joint name="joint_wall_s_w" type="fixed">
       <parent>Wall_S</parent>
@@ -191,6 +221,11 @@
     <joint name="joint_wall_s_rail" type="fixed">
       <parent>Wall_S</parent>
       <child>Fiducial_Rail</child>
+    </joint>
+
+    <joint name="joint_wall_s_column" type="fixed">
+      <parent>Wall_S</parent>
+      <child>Center_Column</child>
     </joint>
 
   </model>

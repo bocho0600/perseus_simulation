@@ -1,0 +1,453 @@
+<?xml version='1.0'?>
+<!--
+  The room around the arena: the event tent the UCF Exolith Lab regolith bin
+  sits under, a concrete floor, and the team pit, mission-control desk, judges'
+  table and people standing round the walls.
+
+  Same frame as perseus_arc_world (guidebook Origin Point, +X east, +Y north).
+  Nothing here is inside the regolith bin: the arena's outer wall faces are
+  X +-4.72, Y -0.15 .. 9.10 (judge platform included), and every prop keeps
+  out of that box, so the rover can't reach any of it.
+
+  SENSOR-VISIBLE ON PURPOSE, unlike lunabotics_zones. A real lidar sees the
+  tent and the people round the walls, so the sim does too:
+
+    - The canopy: eave 3.0 m, ridge 5.5 m. The MID-360's +52 deg rays hit it
+      from about 2.5 m out. Both traversability nodes drop returns more than
+      max_sensor_height_m (1.5 m) above the lidar, which is exactly what that
+      filter is for; LIO gets the extra structure.
+    - Everything at floor level is behind the 0.85 m walls, which are already
+      lethal in the costmaps.
+
+  The canopy and its frame cast no shadows. Under a real tent the bin is lit by
+  the tent lights, not the sun; letting the roof shadow the sun would leave the
+  whole bed on ambient light only and starve the D455 the fiducials depend on.
+
+  Props are OpenRobotics Fuel models, fetched once and cached in ~/.gz/fuel
+  like the Falling Rock boulders. The tent, floor and small fittings are
+  primitives. meshes/tent_canopy.obj is generated: roof, gables and valance,
+  every face wound to face INTO the tent only. ogre2 culls back faces, so the
+  rover's lidar and cameras underneath see the canopy, while the Gazebo GUI
+  looking down from outside sees straight through it to the arena. (The GUI
+  camera has no visibility mask to hide it with, unlike the sensors.) Zoom the
+  GUI camera in under the eave and the canopy shows again.
+-->
+<sdf version='1.8'>
+  <model name='exolith_lab'>
+    <pose>0 0 0 0 0 0</pose>
+    <static>true</static>
+
+    <!-- Concrete floor round the bin, top at grade (z = 0). Four slabs leave a hole for the bin itself. -->
+    <link name='floor_s'>
+      <pose>0.0000 -3.5750 -0.0500 0.0000 0.0000 0.0000</pose>
+      <collision name='floor_s_collision'><geometry><box><size>22.000 6.850 0.100</size></box></geometry></collision>
+      <visual name='floor_s_visual'><geometry><box><size>22.000 6.850 0.100</size></box></geometry>
+        <material><ambient>0.42 0.42 0.40 1</ambient><diffuse>0.52 0.52 0.50 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='floor_n'>
+      <pose>0.0000 12.5500 -0.0500 0.0000 0.0000 0.0000</pose>
+      <collision name='floor_n_collision'><geometry><box><size>22.000 6.900 0.100</size></box></geometry></collision>
+      <visual name='floor_n_visual'><geometry><box><size>22.000 6.900 0.100</size></box></geometry>
+        <material><ambient>0.42 0.42 0.40 1</ambient><diffuse>0.52 0.52 0.50 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='floor_w'>
+      <pose>-7.8600 4.4750 -0.0500 0.0000 0.0000 0.0000</pose>
+      <collision name='floor_w_collision'><geometry><box><size>6.280 9.250 0.100</size></box></geometry></collision>
+      <visual name='floor_w_visual'><geometry><box><size>6.280 9.250 0.100</size></box></geometry>
+        <material><ambient>0.42 0.42 0.40 1</ambient><diffuse>0.52 0.52 0.50 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='floor_e'>
+      <pose>7.8600 4.4750 -0.0500 0.0000 0.0000 0.0000</pose>
+      <collision name='floor_e_collision'><geometry><box><size>6.280 9.250 0.100</size></box></geometry></collision>
+      <visual name='floor_e_visual'><geometry><box><size>6.280 9.250 0.100</size></box></geometry>
+        <material><ambient>0.42 0.42 0.40 1</ambient><diffuse>0.52 0.52 0.50 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+
+    <!-- Yellow safety tape 1 m outside the walls: keep-out line for spectators -->
+    <link name='tape_s'>
+      <pose>0.0000 -1.1500 0.0020 0.0000 0.0000 0.0000</pose>
+      <visual name='tape_s_visual'><geometry><box><size>11.490 0.050 0.004</size></box></geometry>
+        <material><ambient>0.76 0.64 0.08 1</ambient><diffuse>0.95 0.80 0.10 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='tape_n'>
+      <pose>0.0000 10.1000 0.0020 0.0000 0.0000 0.0000</pose>
+      <visual name='tape_n_visual'><geometry><box><size>11.490 0.050 0.004</size></box></geometry>
+        <material><ambient>0.76 0.64 0.08 1</ambient><diffuse>0.95 0.80 0.10 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='tape_w'>
+      <pose>-5.7200 4.4750 0.0020 0.0000 0.0000 0.0000</pose>
+      <visual name='tape_w_visual'><geometry><box><size>0.050 11.250 0.004</size></box></geometry>
+        <material><ambient>0.76 0.64 0.08 1</ambient><diffuse>0.95 0.80 0.10 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='tape_e'>
+      <pose>5.7200 4.4750 0.0020 0.0000 0.0000 0.0000</pose>
+      <visual name='tape_e_visual'><geometry><box><size>0.050 11.250 0.004</size></box></geometry>
+        <material><ambient>0.76 0.64 0.08 1</ambient><diffuse>0.95 0.80 0.10 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+
+    <!-- Event tent: 17 m x 17 m frame, eave 3.0 m, ridge 5.5 m along Y -->
+    <link name='tent_canopy'>
+      <visual name='tent_canopy_visual'>
+        <cast_shadows>false</cast_shadows>
+        <geometry><mesh><uri>model://exolith_lab/meshes/tent_canopy.obj</uri></mesh></geometry>
+        <material><ambient>0.85 0.85 0.83 1</ambient><diffuse>0.95 0.95 0.93 1</diffuse><specular>0.05 0.05 0.05 1</specular><emissive>0.18 0.18 0.17 1</emissive></material>
+      </visual>
+    </link>
+    <link name='pole_w0'>
+      <pose>-8.5000 -4.0000 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_w0_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_w0'>
+      <pose>-4.2500 -4.0000 4.2500 0.0000 -0.2861 0.0000</pose>
+      <visual name='rafter_w0_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_e0'>
+      <pose>8.5000 -4.0000 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_e0_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_e0'>
+      <pose>4.2500 -4.0000 4.2500 0.0000 0.2861 0.0000</pose>
+      <visual name='rafter_e0_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_w1'>
+      <pose>-8.5000 0.2500 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_w1_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_w1'>
+      <pose>-4.2500 0.2500 4.2500 0.0000 -0.2861 0.0000</pose>
+      <visual name='rafter_w1_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_e1'>
+      <pose>8.5000 0.2500 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_e1_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_e1'>
+      <pose>4.2500 0.2500 4.2500 0.0000 0.2861 0.0000</pose>
+      <visual name='rafter_e1_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_w2'>
+      <pose>-8.5000 4.5000 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_w2_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_w2'>
+      <pose>-4.2500 4.5000 4.2500 0.0000 -0.2861 0.0000</pose>
+      <visual name='rafter_w2_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_e2'>
+      <pose>8.5000 4.5000 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_e2_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_e2'>
+      <pose>4.2500 4.5000 4.2500 0.0000 0.2861 0.0000</pose>
+      <visual name='rafter_e2_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_w3'>
+      <pose>-8.5000 8.7500 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_w3_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_w3'>
+      <pose>-4.2500 8.7500 4.2500 0.0000 -0.2861 0.0000</pose>
+      <visual name='rafter_w3_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_e3'>
+      <pose>8.5000 8.7500 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_e3_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_e3'>
+      <pose>4.2500 8.7500 4.2500 0.0000 0.2861 0.0000</pose>
+      <visual name='rafter_e3_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_w4'>
+      <pose>-8.5000 13.0000 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_w4_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_w4'>
+      <pose>-4.2500 13.0000 4.2500 0.0000 -0.2861 0.0000</pose>
+      <visual name='rafter_w4_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_e4'>
+      <pose>8.5000 13.0000 1.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_e4_visual'><geometry><cylinder><radius>0.05</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='rafter_e4'>
+      <pose>4.2500 13.0000 4.2500 0.0000 0.2861 0.0000</pose>
+      <visual name='rafter_e4_visual'><geometry><box><size>8.860 0.080 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='gable_pole_s'>
+      <pose>0.0000 -4.0000 2.7500 0.0000 0.0000 0.0000</pose>
+      <visual name='gable_pole_s_visual'><geometry><cylinder><radius>0.05</radius><length>5.5</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='gable_pole_n'>
+      <pose>0.0000 13.0000 2.7500 0.0000 0.0000 0.0000</pose>
+      <visual name='gable_pole_n_visual'><geometry><cylinder><radius>0.05</radius><length>5.5</length></cylinder></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='eave_beam_w'>
+      <pose>-8.5000 4.5000 3.0000 0.0000 0.0000 0.0000</pose>
+      <visual name='eave_beam_w_visual'><geometry><box><size>0.080 17.000 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='eave_beam_e'>
+      <pose>8.5000 4.5000 3.0000 0.0000 0.0000 0.0000</pose>
+      <visual name='eave_beam_e_visual'><geometry><box><size>0.080 17.000 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='ridge_beam'>
+      <pose>0.0000 4.5000 5.5000 0.0000 0.0000 0.0000</pose>
+      <visual name='ridge_beam_visual'><geometry><box><size>0.080 17.000 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_w0'>
+      <pose>-8.5000 -4.0000 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_w0_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_w1'>
+      <pose>-8.5000 0.2500 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_w1_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_w2'>
+      <pose>-8.5000 4.5000 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_w2_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_w3'>
+      <pose>-8.5000 8.7500 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_w3_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_w4'>
+      <pose>-8.5000 13.0000 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_w4_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_e0'>
+      <pose>8.5000 -4.0000 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_e0_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_e1'>
+      <pose>8.5000 0.2500 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_e1_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_e2'>
+      <pose>8.5000 4.5000 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_e2_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_e3'>
+      <pose>8.5000 8.7500 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_e3_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pole_foot_e4'>
+      <pose>8.5000 13.0000 0.0100 0.0000 0.0000 0.0000</pose>
+      <visual name='pole_foot_e4_visual'><geometry><box><size>0.250 0.250 0.020</size></box></geometry>
+        <material><ambient>0.24 0.24 0.24 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+
+    <!-- Tent lights: high-bay fixtures under the ridge. Lights are attached below; no shadows, so the GPU cost stays flat -->
+    <link name='high_bay_0'>
+      <pose>0.0000 0.5000 5.2500 0.0000 0.0000 0.0000</pose>
+      <visual name='high_bay_0_visual'><geometry><box><size>0.600 0.600 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.16 0.16 0.16 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>1.00 1.00 0.95 1</emissive></material></visual>
+    </link>
+    <link name='high_bay_drop_0'>
+      <pose>0.0000 0.5000 5.3800 0.0000 0.0000 0.0000</pose>
+      <visual name='high_bay_drop_0_visual'><geometry><cylinder><radius>0.01</radius><length>0.24</length></cylinder></geometry>
+        <material><ambient>0.08 0.08 0.08 1</ambient><diffuse>0.10 0.10 0.10 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='high_bay_1'>
+      <pose>0.0000 4.5000 5.2500 0.0000 0.0000 0.0000</pose>
+      <visual name='high_bay_1_visual'><geometry><box><size>0.600 0.600 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.16 0.16 0.16 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>1.00 1.00 0.95 1</emissive></material></visual>
+    </link>
+    <link name='high_bay_drop_1'>
+      <pose>0.0000 4.5000 5.3800 0.0000 0.0000 0.0000</pose>
+      <visual name='high_bay_drop_1_visual'><geometry><cylinder><radius>0.01</radius><length>0.24</length></cylinder></geometry>
+        <material><ambient>0.08 0.08 0.08 1</ambient><diffuse>0.10 0.10 0.10 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='high_bay_2'>
+      <pose>0.0000 8.5000 5.2500 0.0000 0.0000 0.0000</pose>
+      <visual name='high_bay_2_visual'><geometry><box><size>0.600 0.600 0.080</size></box></geometry><cast_shadows>false</cast_shadows>
+        <material><ambient>0.16 0.16 0.16 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>1.00 1.00 0.95 1</emissive></material></visual>
+    </link>
+    <link name='high_bay_drop_2'>
+      <pose>0.0000 8.5000 5.3800 0.0000 0.0000 0.0000</pose>
+      <visual name='high_bay_drop_2_visual'><geometry><cylinder><radius>0.01</radius><length>0.24</length></cylinder></geometry>
+        <material><ambient>0.08 0.08 0.08 1</ambient><diffuse>0.10 0.10 0.10 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+
+    <!-- Mission control: two folding tables behind the front (south) wall, monitors facing the operators -->
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/foldable_table</uri><name>mc_table_0</name><pose>-1.600 -3.200 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/MonitorAndKeyboard</uri><name>mc_monitor_00</name><pose>-2.050 -3.000 0.684 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/OfficeChairBlack</uri><name>mc_chair_00</name><pose>-2.050 -4.100 0.000 0 0 3.1416</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/MonitorAndKeyboard</uri><name>mc_monitor_01</name><pose>-1.150 -3.000 0.684 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/OfficeChairBlack</uri><name>mc_chair_01</name><pose>-1.150 -4.100 0.000 0 0 3.1416</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/foldable_table</uri><name>mc_table_1</name><pose>1.600 -3.200 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/MonitorAndKeyboard</uri><name>mc_monitor_10</name><pose>1.150 -3.000 0.684 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/OfficeChairBlack</uri><name>mc_chair_10</name><pose>1.150 -4.100 0.000 0 0 3.1416</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/MonitorAndKeyboard</uri><name>mc_monitor_11</name><pose>2.050 -3.000 0.684 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/OfficeChairBlack</uri><name>mc_chair_11</name><pose>2.050 -4.100 0.000 0 0 3.1416</pose></include>
+    <link name='mc_router'>
+      <pose>2.8000 -3.3500 0.7200 0.0000 0.0000 0.0000</pose>
+      <visual name='mc_router_visual'><geometry><box><size>0.250 0.180 0.050</size></box></geometry>
+        <material><ambient>0.06 0.06 0.06 1</ambient><diffuse>0.08 0.08 0.08 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0.00 0.25 0.00 1</emissive></material></visual>
+    </link>
+    <link name='mc_estop_box'>
+      <pose>-2.8500 -3.0000 0.7300 0.0000 0.0000 0.0000</pose>
+      <visual name='mc_estop_box_visual'><geometry><box><size>0.120 0.120 0.080</size></box></geometry>
+        <material><ambient>0.76 0.64 0.08 1</ambient><diffuse>0.95 0.80 0.10 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='mc_estop'>
+      <pose>-2.8500 -3.0000 0.7900 0.0000 0.0000 0.0000</pose>
+      <visual name='mc_estop_visual'><geometry><cylinder><radius>0.035</radius><length>0.04</length></cylinder></geometry>
+        <material><ambient>0.68 0.04 0.04 1</ambient><diffuse>0.85 0.05 0.05 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+
+    <!-- Team pit, west side: work table, tools, shelving, spares and a whiteboard -->
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/foldable_table</uri><name>pit_table_0</name><pose>-7.000 2.200 0.000 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/foldable_table</uri><name>pit_table_1</name><pose>-7.000 5.600 0.000 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Toolbox</uri><name>pit_toolbox</name><pose>-7.000 1.700 0.684 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/MonitorAndKeyboard</uri><name>pit_laptop</name><pose>-7.100 5.800 0.684 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/OfficeChairBlack</uri><name>pit_chair_0</name><pose>-7.900 2.600 0.000 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/OfficeChairBlack</uri><name>pit_chair_1</name><pose>-7.900 5.300 0.000 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/SquareShelf</uri><name>pit_shelf_0</name><pose>-10.300 1.500 0.000 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/SquareShelf</uri><name>pit_shelf_1</name><pose>-10.300 2.400 0.000 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/MetalCabinet</uri><name>pit_cabinet</name><pose>-10.300 3.700 0.000 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/TrashBin</uri><name>pit_bin</name><pose>-6.300 7.400 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/TrashBin</uri><name>mc_bin</name><pose>3.400 -3.600 0.000 0 0 0.0000</pose></include>
+    <link name='pit_crate_0'>
+      <pose>-10.2000 5.4000 0.2000 0.0000 0.0000 0.0000</pose>
+      <visual name='pit_crate_0_visual'><geometry><box><size>0.600 0.400 0.400</size></box></geometry>
+        <material><ambient>0.50 0.37 0.22 1</ambient><diffuse>0.62 0.46 0.28 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pit_crate_1'>
+      <pose>-10.2000 5.4000 0.5500 0.0000 0.0000 0.1000</pose>
+      <visual name='pit_crate_1_visual'><geometry><box><size>0.500 0.350 0.300</size></box></geometry>
+        <material><ambient>0.50 0.37 0.22 1</ambient><diffuse>0.62 0.46 0.28 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pit_crate_2'>
+      <pose>-10.2500 6.1000 0.1750 0.0000 0.0000 0.2000</pose>
+      <visual name='pit_crate_2_visual'><geometry><box><size>0.450 0.450 0.350</size></box></geometry>
+        <material><ambient>0.50 0.37 0.22 1</ambient><diffuse>0.62 0.46 0.28 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pit_crate_3'>
+      <pose>-9.6000 6.0000 0.1500 0.0000 0.0000 0.3000</pose>
+      <visual name='pit_crate_3_visual'><geometry><box><size>0.400 0.300 0.300</size></box></geometry>
+        <material><ambient>0.50 0.37 0.22 1</ambient><diffuse>0.62 0.46 0.28 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='pit_battery_case'>
+      <pose>-6.8500 5.2000 0.7400 0.0000 0.0000 0.0000</pose>
+      <visual name='pit_battery_case_visual'><geometry><box><size>0.450 0.300 0.120</size></box></geometry>
+        <material><ambient>0.10 0.10 0.10 1</ambient><diffuse>0.12 0.12 0.12 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='whiteboard'>
+      <pose>-9.3000 7.9000 1.3500 0.0000 0.0000 1.2000</pose>
+      <visual name='whiteboard_visual'><geometry><box><size>1.600 0.030 1.000</size></box></geometry>
+        <material><ambient>0.77 0.77 0.77 1</ambient><diffuse>0.96 0.96 0.96 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0.10 0.10 0.10 1</emissive></material></visual>
+    </link>
+    <link name='whiteboard_leg_0'>
+      <pose>-9.5718 7.2010 0.9000 0.0000 0.0000 1.2000</pose>
+      <visual name='whiteboard_leg_0_visual'><geometry><box><size>0.040 0.040 1.800</size></box></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='whiteboard_leg_1'>
+      <pose>-9.0282 8.5990 0.9000 0.0000 0.0000 1.2000</pose>
+      <visual name='whiteboard_leg_1_visual'><geometry><box><size>0.040 0.040 1.800</size></box></geometry>
+        <material><ambient>0.60 0.61 0.62 1</ambient><diffuse>0.75 0.76 0.78 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+
+    <!-- Judges' table north of the judge platform, and a scoreboard screen -->
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/foldable_table</uri><name>judge_table</name><pose>0.000 10.600 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/OfficeChairBlack</uri><name>judge_chair_0</name><pose>-0.600 11.400 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/OfficeChairBlack</uri><name>judge_chair_1</name><pose>0.600 11.400 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/MonitorAndKeyboard</uri><name>judge_laptop</name><pose>0.400 10.500 0.684 0 0 -1.5708</pose></include>
+    <link name='scoreboard'>
+      <pose>0.0000 12.6000 2.1000 0.0000 0.0000 0.0000</pose>
+      <visual name='scoreboard_visual'><geometry><box><size>2.400 0.080 1.400</size></box></geometry>
+        <material><ambient>0.02 0.02 0.04 1</ambient><diffuse>0.03 0.03 0.05 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0.05 0.12 0.30 1</emissive></material></visual>
+    </link>
+    <link name='scoreboard_post_0'>
+      <pose>-1.0000 12.6600 0.7000 0.0000 0.0000 0.0000</pose>
+      <visual name='scoreboard_post_0_visual'><geometry><box><size>0.060 0.060 1.400</size></box></geometry>
+        <material><ambient>0.12 0.12 0.12 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+    <link name='scoreboard_post_1'>
+      <pose>1.0000 12.6600 0.7000 0.0000 0.0000 0.0000</pose>
+      <visual name='scoreboard_post_1_visual'><geometry><box><size>0.060 0.060 1.400</size></box></geometry>
+        <material><ambient>0.12 0.12 0.12 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse><specular>0.1 0.1 0.1 1</specular></material></visual>
+    </link>
+
+    <!-- East ingress: cones marking the rover load-in lane -->
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone</uri><name>cone_00</name><pose>5.600 1.000 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone</uri><name>cone_01</name><pose>7.200 1.000 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone</uri><name>cone_10</name><pose>5.600 2.000 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone</uri><name>cone_11</name><pose>7.200 2.000 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone</uri><name>cone_20</name><pose>5.600 3.000 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone</uri><name>cone_21</name><pose>7.200 3.000 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone</uri><name>cone_30</name><pose>5.600 4.000 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone</uri><name>cone_31</name><pose>7.200 4.000 0.000 0 0 0.0000</pose></include>
+
+    <!-- People: team members, judges and spectators, all outside the walls -->
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Standing person</uri><name>operator_0</name><pose>-0.400 -3.850 0.000 0 0 3.1416</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Casual female</uri><name>operator_1</name><pose>2.900 -2.600 0.000 0 0 3.1416</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/FemaleVisitor</uri><name>pit_crew_0</name><pose>-6.200 4.000 0.000 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Standing person</uri><name>pit_crew_1</name><pose>-8.300 1.200 0.000 0 0 1.5708</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Standing person</uri><name>judge_0</name><pose>2.600 8.750 0.500 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Casual female</uri><name>judge_1</name><pose>-1.600 10.200 0.000 0 0 0.0000</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/FemaleVisitor</uri><name>spectator_0</name><pose>6.000 6.500 0.000 0 0 4.7124</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Standing person</uri><name>spectator_1</name><pose>6.300 7.600 0.000 0 0 4.7124</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Casual female</uri><name>spectator_2</name><pose>-5.600 -1.400 0.000 0 0 2.3562</pose></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/FemaleVisitor</uri><name>spectator_3</name><pose>4.400 -1.500 0.000 0 0 3.9270</pose></include>
+
+    <!-- Tent lights. Point lights, no shadows: one per high-bay fixture. Lights
+         have to sit in a link; a <light> straight under <model> is not valid SDF. -->
+    <link name='tent_lights'>
+    <light name='high_bay_light_0' type='point'>
+      <pose>0 0.5 5.1 0 0 0</pose>
+      <cast_shadows>false</cast_shadows>
+      <diffuse>0.55 0.55 0.52 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation><range>18</range><constant>0.6</constant><linear>0.03</linear><quadratic>0.005</quadratic></attenuation>
+    </light>
+    <light name='high_bay_light_1' type='point'>
+      <pose>0 4.5 5.1 0 0 0</pose>
+      <cast_shadows>false</cast_shadows>
+      <diffuse>0.55 0.55 0.52 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation><range>18</range><constant>0.6</constant><linear>0.03</linear><quadratic>0.005</quadratic></attenuation>
+    </light>
+    <light name='high_bay_light_2' type='point'>
+      <pose>0 8.5 5.1 0 0 0</pose>
+      <cast_shadows>false</cast_shadows>
+      <diffuse>0.55 0.55 0.52 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation><range>18</range><constant>0.6</constant><linear>0.03</linear><quadratic>0.005</quadratic></attenuation>
+    </light>
+    </link>
+  </model>
+</sdf>

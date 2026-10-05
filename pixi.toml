@@ -17,6 +17,24 @@ platforms = ["linux-64"]
 [activation.env]
 GZ_SIM_SYSTEM_PLUGIN_PATH = "$CONDA_PREFIX/lib"
 GZ_SIM_RESOURCE_PATH = "$CONDA_PREFIX/share"
+# `gz` is a Ruby CLI that discovers its subcommands from the yaml files in
+# GZ_CONFIG_PATH -- `gz sim` exists only because $CONDA_PREFIX/share/gz/sim8.yaml
+# does. Unlike the two paths above, this one is inherited rather than set, so a
+# value from the outer shell wins. The perseus-v3 devenv exports
+#
+#   GZ_CONFIG_PATH=/nix/store/...-ros-jazzy-gz-cmake-vendor-.../share/gz:
+#                  /nix/store/...-ros-env/share/gz
+#
+# and neither directory ships sim8.yaml (the ros-env has only sdformat14.yaml).
+# `eval "$(devenv hook bash)"` in ~/.bashrc enters that shell on `cd`, so running
+# `pixi run sim` from a terminal that has visited perseus-v3 poisons the variable.
+# `gz sim` is then an unknown subcommand: gz prints its usage text and exits 255
+# about 70 ms in, before the "Gazebo Sim Server" banner. Nothing else notices --
+# what you see is ros_gz_sim repeating "Requesting list of world names." forever
+# and the controller spawners never finding /controller_manager, the same
+# symptom as the Ruby gem leak described in scripts/pixi-run.sh.
+# Setting it here overwrites whatever the outer shell had.
+GZ_CONFIG_PATH = "$CONDA_PREFIX/share/gz"
 
 # ---------------------------------------------------------------------------
 # Tasks

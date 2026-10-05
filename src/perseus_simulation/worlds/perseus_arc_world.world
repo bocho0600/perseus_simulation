@@ -42,6 +42,13 @@
       filename="gz-sim-imu-system"
       name="gz::sim::systems::Imu">
     </plugin>
+    <!-- Diggable regolith (perseus_simulation src/regolith_dig.cpp): the bucket
+         cuts the bed, carries the load and dumps it into berms; the bed is
+         rebuilt as it changes. Defaults match Moon_DEM and the bucket model. -->
+    <plugin
+      filename="RegolithDig"
+      name="perseus_simulation::RegolithDig">
+    </plugin>
 
     <physics type="ode">
       <real_time_update_rate>1000.0</real_time_update_rate>
@@ -110,9 +117,271 @@
       <uri>model://lunabotics_fiducials</uri>
     </include>
 
-    <!-- 30-40 cm boulder obstacles, section 3.1 -->
+    <!--
+      Boulder obstacles, guidebook section 3.1: 30-40 cm, at least three on the
+      obstacle zone surface. Each is its own top-level model rather than a link
+      of one shared model, so it can be picked and dragged on its own in the
+      Gazebo GUI (Translate tool, T) to re-roll the obstacle field - the real
+      placement is randomised before every run. Static, so they never settle or
+      get pushed; moving one in the GUI moves its collision too.
+
+      The OpenRobotics "Falling Rock" meshes are metre-scale, so each is scaled
+      into the 30-40 cm band (extents noted per boulder). Each Z is the terrain
+      height measured at that XY (a probe body dropped onto the squeezed
+      Moon_DEM) plus 0.2 * height, leaving the bottom 30% buried. A boulder
+      dragged elsewhere keeps its Z, so on a slope it may float or sink a few cm;
+      re-measure if that matters. These poses keep clear of the starting zone
+      (X -2.25..0, Y 0..2.25) and the construction zone (X 2.52..4.57, Y 4.69..8.10).
+    -->
+    <!-- Falling Rock 4 scaled to 0.35 x 0.34 x 0.37 m; grade here is +0.039 m -->
+    <model name='boulder_1'>
+      <static>true</static>
+      <pose>-2.95 4.3 0.113 0 0 1.36</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/meshes/FallingRock04_Collider.dae</uri>
+              <scale>0.82 0.82 0.82</scale>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/meshes/FallingRock04.dae</uri>
+              <scale>0.82 0.82 0.82</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>1.0 1.0 1.0</diffuse>
+            <specular>1.0 1.0 1.0</specular>
+            <pbr>
+              <metal>
+                <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/materials/textures/FallingRocks_Albedo.jpg</albedo_map>
+                <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/materials/textures/FallingRocks_Normal.jpg</normal_map>
+                <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/materials/textures/FallingRocks_Roughness.jpg</roughness_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Falling Rock 2 scaled to 0.34 x 0.38 x 0.32 m; grade here is +0.006 m -->
+    <model name='boulder_2'>
+      <static>true</static>
+      <pose>-0.55 5.6 0.07 0 0 -2.11</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/meshes/FallingRock02_Collider.dae</uri>
+              <scale>0.38 0.38 0.38</scale>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/meshes/FallingRock02.dae</uri>
+              <scale>0.38 0.38 0.38</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>1.0 1.0 1.0</diffuse>
+            <specular>1.0 1.0 1.0</specular>
+            <pbr>
+              <metal>
+                <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/materials/textures/FallingRocks_Albedo.jpg</albedo_map>
+                <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/materials/textures/FallingRocks_Normal.jpg</normal_map>
+                <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/materials/textures/FallingRocks_Roughness.jpg</roughness_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Falling Rock 1 scaled to 0.36 x 0.36 x 0.33 m; grade here is -0.032 m -->
+    <model name='boulder_3'>
+      <static>true</static>
+      <pose>1.7 3.95 0.035 0 0 0.44</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/meshes/FallingRock01_Collider.dae</uri>
+              <scale>0.24 0.24 0.24</scale>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/meshes/FallingRock01.dae</uri>
+              <scale>0.24 0.24 0.24</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>1.0 1.0 1.0</diffuse>
+            <specular>1.0 1.0 1.0</specular>
+            <pbr>
+              <metal>
+                <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/materials/textures/FallingRocks_Albedo.jpg</albedo_map>
+                <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/materials/textures/FallingRocks_Normal.jpg</normal_map>
+                <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/materials/textures/FallingRocks_Roughness.jpg</roughness_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Falling Rock 4 scaled to 0.40 x 0.39 x 0.43 m; grade here is +0.025 m -->
+    <model name='boulder_4'>
+      <static>true</static>
+      <pose>-3.55 6.95 0.11 0 0 -1.57</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/meshes/FallingRock04_Collider.dae</uri>
+              <scale>0.94 0.94 0.94</scale>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/meshes/FallingRock04.dae</uri>
+              <scale>0.94 0.94 0.94</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>1.0 1.0 1.0</diffuse>
+            <specular>1.0 1.0 1.0</specular>
+            <pbr>
+              <metal>
+                <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/materials/textures/FallingRocks_Albedo.jpg</albedo_map>
+                <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/materials/textures/FallingRocks_Normal.jpg</normal_map>
+                <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/materials/textures/FallingRocks_Roughness.jpg</roughness_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Falling Rock 2 scaled to 0.30 x 0.34 x 0.29 m; grade here is -0.015 m -->
+    <model name='boulder_5'>
+      <static>true</static>
+      <pose>0.85 7.15 0.042 0 0 2.62</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/meshes/FallingRock02_Collider.dae</uri>
+              <scale>0.34 0.34 0.34</scale>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/meshes/FallingRock02.dae</uri>
+              <scale>0.34 0.34 0.34</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>1.0 1.0 1.0</diffuse>
+            <specular>1.0 1.0 1.0</specular>
+            <pbr>
+              <metal>
+                <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/materials/textures/FallingRocks_Albedo.jpg</albedo_map>
+                <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/materials/textures/FallingRocks_Normal.jpg</normal_map>
+                <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 2/6/files/materials/textures/FallingRocks_Roughness.jpg</roughness_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Falling Rock 1 scaled to 0.31 x 0.31 x 0.29 m; grade here is -0.033 m -->
+    <model name='boulder_6'>
+      <static>true</static>
+      <pose>2.4 1.2 0.025 0 0 1.94</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/meshes/FallingRock01_Collider.dae</uri>
+              <scale>0.21 0.21 0.21</scale>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/meshes/FallingRock01.dae</uri>
+              <scale>0.21 0.21 0.21</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>1.0 1.0 1.0</diffuse>
+            <specular>1.0 1.0 1.0</specular>
+            <pbr>
+              <metal>
+                <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/materials/textures/FallingRocks_Albedo.jpg</albedo_map>
+                <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/materials/textures/FallingRocks_Normal.jpg</normal_map>
+                <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 1/6/files/materials/textures/FallingRocks_Roughness.jpg</roughness_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Falling Rock 4 scaled to 0.37 x 0.36 x 0.40 m; grade here is +0.083 m -->
+    <model name='boulder_7'>
+      <static>true</static>
+      <pose>-3.45 2.7 0.163 0 0 0.12</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/meshes/FallingRock04_Collider.dae</uri>
+              <scale>0.88 0.88 0.88</scale>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/meshes/FallingRock04.dae</uri>
+              <scale>0.88 0.88 0.88</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>1.0 1.0 1.0</diffuse>
+            <specular>1.0 1.0 1.0</specular>
+            <pbr>
+              <metal>
+                <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/materials/textures/FallingRocks_Albedo.jpg</albedo_map>
+                <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/materials/textures/FallingRocks_Normal.jpg</normal_map>
+                <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/falling rock 4/9/files/materials/textures/FallingRocks_Roughness.jpg</roughness_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- The room around the bin: event tent, floor, team pit, mission control,
+         judges and people outside the walls. Sensor-visible; see its header. -->
     <include>
-      <uri>model://lunabotics_boulders</uri>
+      <uri>model://exolith_lab</uri>
     </include>
 
   </world>

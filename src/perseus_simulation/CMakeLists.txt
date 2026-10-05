@@ -75,6 +75,21 @@ foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
   find_package(${Dependency} REQUIRED)
 endforeach()
 
+# GAZEBO SYSTEMS
+# RegolithDig: diggable regolith bed (src/regolith_dig.cpp). Installed to lib/,
+# which gazebo.launch.py puts on GZ_SIM_SYSTEM_PLUGIN_PATH.
+find_package(gz-sim8 REQUIRED)
+find_package(gz-plugin2 REQUIRED COMPONENTS register)
+find_package(gz-common5 REQUIRED COMPONENTS graphics)
+find_package(gz-transport13 REQUIRED)
+find_package(ZLIB REQUIRED)
+add_library(RegolithDig SHARED src/regolith_dig.cpp)
+target_link_libraries(
+  RegolithDig PRIVATE gz-sim8::gz-sim8 gz-plugin2::register
+                      gz-common5::graphics gz-transport13::gz-transport13
+                      ZLIB::ZLIB)
+install(TARGETS RegolithDig LIBRARY DESTINATION lib)
+
 # INSTALL (ROS)
 install(
   DIRECTORY config

@@ -42,6 +42,11 @@ def generate_launch_description():
             default_value="bucket",
             description="Which payload to attach to the rover; 'none' for the bare rover",
         ),
+        DeclareLaunchArgument(
+            "headless",
+            default_value="false",
+            description="If true, run Gazebo without its GUI window",
+        ),
         # Same choices and default as perseus-v3's perseus.launch.py.
         DeclareLaunchArgument(
             "bucket_controller",
@@ -75,6 +80,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
+            "headless": LaunchConfiguration("headless"),
         }.items(),
     )
     rsp_launch = IncludeLaunchDescription(
@@ -158,6 +164,28 @@ def generate_launch_description():
         output="both",
         condition=IfCondition(is_bucket),
     )
+    # /payloads/joint_states_deg, as on the real robot, where payloads'
+    # bucket.launch.py runs this node on the bucket's own /payloads/joint_states.
+    # The sim has no /payloads/joint_states, so it reads /joint_states, filtered
+    # to the three driven joints. Debug output only; nothing consumes it.
+    bucket_joint_states_deg = Node(
+        package="perseus_description",
+        executable="joint_states_deg.py",
+        namespace="payloads",
+        parameters=[
+            {
+                "use_sim_time": use_sim_time,
+                "joints": [
+                    "bucket_lift_joint",
+                    "bucket_tilt_joint",
+                    "bucket_jaw_joint",
+                ],
+            }
+        ],
+        remappings=[("joint_states", "/joint_states")],
+        output="both",
+        condition=IfCondition(is_bucket),
+    )
     rviz_config = PathJoinSubstitution(
         [FindPackageShare("perseus_simulation"), "rviz", "view.rviz"]
     )
@@ -231,6 +259,7 @@ def generate_launch_description():
         rosbridge_launch,
         twist_mux_launch,
         bucket_ram_follower,
+        bucket_joint_states_deg,
         # rviz,
     ]
 

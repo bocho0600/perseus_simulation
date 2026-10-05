@@ -2,16 +2,33 @@
 <!--
   Gazebo sensors for the RealSense D455.
 
-  All four are always_on false, so gz renders them only while something is
+  All are always_on false, so gz renders them only while something is
   subscribed - the same pattern the Livox uses in sensors.urdf.xacro. That
-  matters a lot here: with the four sensors rendering unconditionally at 30 Hz,
-  the whole simulation dropped to RTF 0.395 and the Livox fell from 9.8 Hz to
-  3.87 Hz. Rendering is the dominant cost in this world, and only the colour
-  stream has a consumer (vision/aruco_detector, and cube_detector for aligned
-  depth), so paying for infra1/infra2 continuously is pure waste.
+  matters a lot here: with the sensors rendering unconditionally, the whole
+  simulation dropped to RTF 0.395 and the Livox fell from 9.8 Hz to 3.87 Hz.
+  Rendering is the dominant cost in this world, so paying for a stream nobody
+  is subscribed to is pure waste.
 
-  update_rate is 15 rather than 30 for the same reason. Fiducial acquisition
-  happens while the robot is stationary or turning slowly, so 15 Hz is ample.
+  Resolution and FOV are matched to this robot's actual driver config
+  (sensors/config/realsense.yaml in perseus-v3) rather than picked for sim
+  performance, since vision/stereo_odometry reads camera_info intrinsics and a
+  mismatched FOV or resolution silently changes the scale/geometry it
+  recovers relative to what it'd see on real hardware:
+    - infra1/infra2: 848x480 (depth_module.infra_profile), ~87 deg horizontal
+      FOV (Intel D455 depth-module datasheet spec; not derivable from
+      anything in this repo).
+    - color: 424x240 (rgb_camera.color_profile), ~90 deg horizontal FOV
+      (Intel D455 RGB-module datasheet spec).
+
+  update_rate is 15 Hz on all four, NOT the real driver's 30 Hz for
+  infra1/infra2, because this sim is rendering-bound: with stereo_odometry
+  subscribed, 848x480 @ 30 Hz alone dragged the sim down to Livox 4.32 Hz
+  (RTF ~0.43) and infra1 itself couldn't even hit its configured 30 Hz,
+  measured at ~13 Hz actual. 15 Hz only affects VO tracking quality (smaller
+  effective baseline motion per matched frame), not the intrinsics/scale
+  correctness the resolution and FOV above are responsible for, so it is the
+  cheaper knob to give up first. Bump back to 30 if this sim ever runs on
+  hardware that can render it without starving Livox.
 -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
@@ -46,10 +63,10 @@
         <update_rate>15</update_rate>
         <always_on>false</always_on>
         <camera>
-          <horizontal_fov>1.089</horizontal_fov>
+          <horizontal_fov>1.5708</horizontal_fov>
           <image>
-            <width>640</width>
-            <height>480</height>
+            <width>424</width>
+            <height>240</height>
           </image>
           <clip>
             <near>0.05</near>
@@ -94,9 +111,9 @@
         <update_rate>15</update_rate>
         <always_on>false</always_on>
         <camera>
-          <horizontal_fov>1.089</horizontal_fov>
+          <horizontal_fov>1.5184</horizontal_fov>
           <image>
-            <width>640</width>
+            <width>848</width>
             <height>480</height>
             <format>L_INT8</format>
           </image>
@@ -112,7 +129,7 @@
           -->
           <visibility_mask>268435454</visibility_mask>
         </camera>
-        <topic>/${name}/${name}/infra1/image_raw</topic>
+        <topic>/${name}/${name}/infra1/image_rect_raw</topic>
         <gz_frame_id>${name}_infra1_optical_frame</gz_frame_id>
       </sensor>
     </gazebo>
@@ -125,9 +142,9 @@
         <update_rate>15</update_rate>
         <always_on>false</always_on>
         <camera>
-          <horizontal_fov>1.089</horizontal_fov>
+          <horizontal_fov>1.5184</horizontal_fov>
           <image>
-            <width>640</width>
+            <width>848</width>
             <height>480</height>
             <format>L_INT8</format>
           </image>
@@ -142,8 +159,26 @@
             rendered geometry, not collision geometry.
           -->
           <visibility_mask>268435454</visibility_mask>
+          <!--
+            Stereo baseline, in metres, for the Tx term of this camera's own
+            camera_info.P (REP 104: P[3] = -fx * baseline on the right/second camera
+            of a pair; the left camera's Tx conventionally stays 0, so this element
+            is deliberately only on infra2, not infra1). gz::sensors::CameraSensor
+            does NOT derive this from the URDF: there is no code path that measures
+            the actual distance between infra1_frame and infra2_frame and feeds it in.
+            It is a plain SDF field (CameraSensor::Baseline()/SetBaseline()) that
+            defaults to something unrelated to this robot's geometry if left unset.
+            Confirmed live, subscribing to infra2/camera_info's p field: without this
+            element the reported baseline was about 36 mm, not the 95 mm
+            d455_cam_depth_to_infra2_offset actually places the two cameras at, in
+            realsense2_description's own _d455.urdf.xacro. That is silently wrong
+            scale for any stereo algorithm that reads baseline from camera_info
+            rather than from TF, e.g. vision/stereo_odometry's
+            baseline_from_right_projection().
+          -->
+          <baseline>0.095</baseline>
         </camera>
-        <topic>/${name}/${name}/infra2/image_raw</topic>
+        <topic>/${name}/${name}/infra2/image_rect_raw</topic>
         <gz_frame_id>${name}_infra2_optical_frame</gz_frame_id>
       </sensor>
     </gazebo>

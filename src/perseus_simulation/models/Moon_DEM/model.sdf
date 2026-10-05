@@ -59,6 +59,27 @@
             <pos>0 0 0</pos> <!-- ignored by the collision path; see above -->
           </heightmap>
         </geometry>
+        <surface>
+          <!-- Loose regolith, not rock. Contact friction is the smaller of the two
+               surfaces' coefficients in each direction, so against the wheels'
+               mu 1.5 / mu2 0.2 this gives 0.6 along the wheel (drawbar pull on
+               dry lunar simulant is ~0.4-0.6 of weight) and leaves the wheels'
+               own 0.2 sideways, which skid steering is tuned around. -->
+          <friction>
+            <ode>
+              <mu>0.6</mu>
+              <mu2>0.6</mu2>
+            </ode>
+          </friction>
+          <!-- Bit 0 only. The bucket's collisions are bit 1 only
+               (perseus_description bucket.gazebo.xacro), so the bucket passes
+               through the bed and RegolithDig (src/regolith_dig.cpp) carves it instead: a rigid
+               heightmap cannot be dug, only replaced. Everything else keeps the
+               default all-ones mask and still lands on it. -->
+          <contact>
+            <collide_bitmask>0x01</collide_bitmask>
+          </contact>
+        </surface>
       </collision>
       <visual name="visual">
         <geometry>

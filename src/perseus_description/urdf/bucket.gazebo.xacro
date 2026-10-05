@@ -85,14 +85,27 @@
       <xacro:bucket_ram_follower joint="bucket_ram_jaw_left_extend_joint"   topic="/bucket/ram_jaw/cmd_extend"  kind="extend"/>
     </gazebo>
 
-    <!-- The cutting edge needs grip to bite rather than skate. -->
+    <!-- The cutting edge needs grip to bite rather than skate.
+
+         Every bucket collision is on bit 1 only and the regolith bed on bit 0
+         only (Moon_DEM), so the bucket goes INTO the bed instead of resting on
+         it: the RegolithDig world system (perseus_simulation/src/regolith_dig.cpp)
+         carves the bed where the bucket passes and applies the load and cutting
+         drag as forces. Berms are part of the bed, so the bucket passes through
+         those too. Walls and boulders keep the default all-ones mask, so the
+         bucket still hits them. -->
     <gazebo reference="${prefix}bucket_body">
       <mu1>1.0</mu1>
       <mu2>1.0</mu2>
+      <collision><surface><contact><collide_bitmask>0x02</collide_bitmask></contact></surface></collision>
     </gazebo>
     <gazebo reference="${prefix}bucket_lift_arm">
       <mu1>0.6</mu1>
       <mu2>0.6</mu2>
+      <collision><surface><contact><collide_bitmask>0x02</collide_bitmask></contact></surface></collision>
+    </gazebo>
+    <gazebo reference="${prefix}bucket_jaw">
+      <collision><surface><contact><collide_bitmask>0x02</collide_bitmask></contact></surface></collision>
     </gazebo>
   </xacro:macro>
 </robot>
