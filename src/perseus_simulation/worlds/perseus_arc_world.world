@@ -106,6 +106,12 @@
       <uri>model://lunabotics_zones</uri>
     </include>
 
+    <!-- The four orange poles at the construction zone's corners. Real hardware, so
+         unlike the zone outlines they are visible to sensors and solid. -->
+    <include>
+      <uri>model://construction_poles</uri>
+    </include>
+
     <!-- Regolith surface (squeezed DEM) -->
     <include>
       <uri>model://Moon_DEM</uri>

@@ -1,0 +1,120 @@
+<?xml version='1.0'?>
+<!--
+  The four tall, thin orange poles at the corners of the construction zone in the
+  real arena (X 2.52 .. 4.57, Y 4.69 .. 8.10, guidebook Origin Point frame).
+
+  The guidebook gives no dimensions for them, so these are estimates: 2 cm
+  diameter, about 2 m above grade (2.2 m long, 0.1 m buried). To change them, edit
+  the radius and length of each pole, and its pose Z, which is half the length
+  minus the buried depth.
+
+  Unlike lunabotics_zones these are real hardware, so they have collision and are
+  visible to every sensor: the lidar sees them, and the rover cannot drive through
+  them. The north and east sides of the zone are arena walls, so each pole sits
+  5 cm inside its corner.
+-->
+<sdf version='1.8'>
+  <model name='construction_poles'>
+    <static>true</static>
+
+    <link name='pole_sw'>
+      <pose>2.57 4.74 1.0 0 0 0</pose>
+      <collision name='collision'>
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>2.2</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>2.2</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.0 0.35 0.0 1</ambient>
+          <diffuse>1.0 0.35 0.0 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <link name='pole_se'>
+      <pose>4.52 4.74 1.0 0 0 0</pose>
+      <collision name='collision'>
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>2.2</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>2.2</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.0 0.35 0.0 1</ambient>
+          <diffuse>1.0 0.35 0.0 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <link name='pole_nw'>
+      <pose>2.57 8.05 1.0 0 0 0</pose>
+      <collision name='collision'>
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>2.2</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>2.2</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.0 0.35 0.0 1</ambient>
+          <diffuse>1.0 0.35 0.0 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <link name='pole_ne'>
+      <pose>4.52 8.05 1.0 0 0 0</pose>
+      <collision name='collision'>
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>2.2</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>2.2</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.0 0.35 0.0 1</ambient>
+          <diffuse>1.0 0.35 0.0 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

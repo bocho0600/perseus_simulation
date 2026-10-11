@@ -124,16 +124,15 @@ def generate_launch_description():
     # sequencing changes, this is the place to tune or replace with an event-
     # driven trigger.
     # The bucket shares the drive's controller_manager (gz_ros2_control runs one
-    # per model), but its controller is put in the payloads namespace so the
-    # action is /payloads/<controller>/follow_joint_trajectory, as on the real
-    # robot. Its parameters come from bucket_controllers.yaml via the plugin.
+    # per model), and its controller is spawned in the root namespace, as
+    # perseus-v3's controllers.launch.py does, so the action is
+    # /<controller>/follow_joint_trajectory, which mission_bt_server expects.
+    # Its parameters come from bucket_controllers.yaml via the plugin.
     bucket_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
         arguments=[
             bucket_controller,
-            "--controller-ros-args",
-            "-r __ns:=/payloads",
         ],
         parameters=[{"use_sim_time": use_sim_time}],
         condition=IfCondition(
@@ -185,6 +184,15 @@ def generate_launch_description():
         remappings=[("joint_states", "/joint_states")],
         output="both",
         condition=IfCondition(is_bucket),
+    )
+    # Turns the dense gpu_lidar grid into the MID-360's non-repetitive scan on
+    # /livox/lidar. See the script for why gpu_lidar cannot do that itself.
+    livox_pattern_sampler = Node(
+        package="perseus_description",
+        executable="livox_pattern_sampler.py",
+        name="livox_pattern_sampler",
+        parameters=[{"use_sim_time": use_sim_time}],
+        output="both",
     )
     rviz_config = PathJoinSubstitution(
         [FindPackageShare("perseus_simulation"), "rviz", "view.rviz"]
@@ -259,6 +267,7 @@ def generate_launch_description():
         rosbridge_launch,
         twist_mux_launch,
         bucket_ram_follower,
+        livox_pattern_sampler,
         bucket_joint_states_deg,
         # rviz,
     ]

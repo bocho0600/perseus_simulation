@@ -84,11 +84,15 @@
   direction: GZ_TO_ROS
   lazy: true
 # ─── Livox MID-360 ───────────────────────────────────────────────────────────
-- ros_topic_name: "/livox/lidar"
-  gz_topic_name: "/scan_3d/points"
+# The dense gpu_lidar grid, not the cloud the stack reads: livox_pattern_sampler.py
+# samples it along the MID-360's scan pattern and publishes /livox/lidar. Lazy, so
+# the lidar only renders while the sampler is running.
+- ros_topic_name: "/livox/lidar_dense"
+  gz_topic_name: "/scan_3d_dense/points"
   ros_type_name: "sensor_msgs/msg/PointCloud2"
   gz_type_name: "gz.msgs.PointCloudPacked"
   direction: GZ_TO_ROS
+  lazy: true
 - ros_topic_name: "/livox/imu"
   gz_topic_name: "/scan_3d/imu"
   ros_type_name: "sensor_msgs/msg/Imu"
