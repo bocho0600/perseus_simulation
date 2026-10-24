@@ -14,6 +14,8 @@ from launch.substitutions import (
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 import os
+import re
+import tempfile
 
 from ament_index_python.packages import (
     get_package_prefix,
@@ -25,6 +27,7 @@ def generate_launch_description():
     # ARGUMENTS
     gz_world = LaunchConfiguration("gz_world", default="perseus_arc_world.world")
     headless = LaunchConfiguration("headless")
+    skid_slip = LaunchConfiguration("skid_slip")
 
     # CONFIG + DATA FILES
     gz_bridge_params = PathJoinSubstitution(
@@ -48,6 +51,14 @@ def generate_launch_description():
             description=(
                 "If true, run only the Gazebo server, with no GUI window. The "
                 "lidar and cameras still render, offscreen"
+            ),
+        ),
+        DeclareLaunchArgument(
+            "skid_slip",
+            default_value="true",
+            description=(
+                "If false, drop the world's SkidSlip plugin so the rover turns "
+                "exactly as its wheels command, with no slip"
             ),
         ),
         # Default spawn is the centre of the Lunabotics starting zone, facing
@@ -123,6 +134,24 @@ def generate_launch_description():
     def gz_launch(context):
         # Perform the world path substitution
         performed_gz_world_path = gz_world_path.perform(context)
+        # Without slip, load a copy of the world with the SkidSlip plugin cut
+        # out. The world finds its models by model:// URI, so the copy can
+        # live anywhere.
+        if not IfCondition(skid_slip).evaluate(context):
+            with open(performed_gz_world_path) as f:
+                world = f.read()
+            world, removed = re.subn(
+                r'<plugin\b[^>]*filename="SkidSlip"[^>]*>.*?</plugin>',
+                "",
+                world,
+                flags=re.S,
+            )
+            if removed:
+                with tempfile.NamedTemporaryFile(
+                    "w", suffix=".world", delete=False
+                ) as f:
+                    f.write(world)
+                performed_gz_world_path = f.name
         # -s runs the server alone. The gpu_lidar and cameras still need a
         # renderer, which --headless-rendering gives them without a display.
         server_only = (

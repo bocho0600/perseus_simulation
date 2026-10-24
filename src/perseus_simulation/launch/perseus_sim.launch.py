@@ -47,6 +47,11 @@ def generate_launch_description():
             default_value="false",
             description="If true, run Gazebo without its GUI window",
         ),
+        DeclareLaunchArgument(
+            "skid_slip",
+            default_value="true",
+            description="If false, the rover turns with no skid-steer slip",
+        ),
         # Same choices and default as perseus-v3's perseus.launch.py.
         DeclareLaunchArgument(
             "bucket_controller",
@@ -81,6 +86,7 @@ def generate_launch_description():
         launch_arguments={
             "use_sim_time": use_sim_time,
             "headless": LaunchConfiguration("headless"),
+            "skid_slip": LaunchConfiguration("skid_slip"),
         }.items(),
     )
     rsp_launch = IncludeLaunchDescription(

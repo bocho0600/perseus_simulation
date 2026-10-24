@@ -90,6 +90,14 @@ target_link_libraries(
                       ZLIB::ZLIB)
 install(TARGETS RegolithDig LIBRARY DESTINATION lib)
 
+# SkidSlip: makes the rover turn at a fraction of the commanded yaw rate, like the
+# real one on sand (src/skid_slip.cpp). Same install place as RegolithDig.
+add_library(SkidSlip SHARED src/skid_slip.cpp)
+target_link_libraries(
+  SkidSlip PRIVATE gz-sim8::gz-sim8 gz-plugin2::register
+                   gz-transport13::gz-transport13)
+install(TARGETS SkidSlip LIBRARY DESTINATION lib)
+
 # INSTALL (ROS)
 install(
   DIRECTORY config
